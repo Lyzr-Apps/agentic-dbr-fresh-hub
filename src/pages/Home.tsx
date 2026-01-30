@@ -9,6 +9,9 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Label } from '@/components/ui/label'
 import {
   Send,
   ChevronDown,
@@ -29,7 +32,16 @@ import {
   PhoneCall,
   UserCircle,
   LogOut,
-  Sparkles
+  Sparkles,
+  X,
+  CreditCard,
+  MapPin,
+  Mail,
+  Phone,
+  Calendar,
+  DollarSign,
+  Activity,
+  Flag
 } from 'lucide-react'
 
 // Agent IDs from workflow.json
@@ -41,6 +53,7 @@ interface ConversationAnalysis {
   sentiment: string
   urgency: string
   issue_summary: string
+  clarifying_questions?: string[]
 }
 
 interface ScopeAssessment {
@@ -90,6 +103,32 @@ interface AgentActivity {
   timestamp: Date
 }
 
+// Dummy customer data
+const CUSTOMER_PROFILE = {
+  name: "Sarah Johnson",
+  customerId: "CUST-87654",
+  accountStatus: "Active",
+  memberSince: "January 2023",
+  accountType: "Varo Bank Account",
+  currentBalance: 2847.32,
+  recentActivity: [
+    { type: "Direct deposit", amount: 1500.00, date: "2 days ago", location: "" },
+    { type: "Card purchase", amount: 45.67, date: "3 days ago", location: "Whole Foods" },
+    { type: "ATM withdrawal", amount: 100.00, date: "5 days ago", location: "" }
+  ],
+  flags: [
+    { type: "success", text: "No risk flags" },
+    { type: "success", text: "Account in good standing" },
+    { type: "success", text: "Email verified" },
+    { type: "success", text: "Phone verified" }
+  ],
+  contactInfo: {
+    email: "sarah.johnson@email.com",
+    phone: "(555) 123-4567",
+    address: "123 Main St, San Francisco, CA 94102"
+  }
+}
+
 // Sub-components defined outside Home() to prevent re-creation
 function TopHeader({ sessionTime, dbrName }: { sessionTime: string; dbrName: string }) {
   return (
@@ -131,6 +170,348 @@ function TopHeader({ sessionTime, dbrName }: { sessionTime: string; dbrName: str
   )
 }
 
+function RequestClarificationModal({
+  open,
+  onClose,
+  clarifyingQuestions,
+  onSelectQuestion
+}: {
+  open: boolean
+  onClose: () => void
+  clarifyingQuestions: string[]
+  onSelectQuestion: (question: string) => void
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl bg-white">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-gray-900">
+            <MessageSquare className="w-5 h-5 text-[#8c58d0]" />
+            Request Clarification
+          </DialogTitle>
+          <DialogDescription className="text-gray-600">
+            Select a clarifying question to send to the customer
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-3 py-4">
+          {clarifyingQuestions.length > 0 ? (
+            clarifyingQuestions.map((question, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  onSelectQuestion(question)
+                  onClose()
+                }}
+                className="w-full text-left p-4 bg-gradient-to-br from-purple-50 to-white border border-purple-200 rounded-lg hover:border-[#8c58d0] hover:shadow-md transition-all group"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-gradient-to-br from-[#8c58d0] to-[#9b6dd9] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-white text-xs font-bold">{index + 1}</span>
+                  </div>
+                  <p className="text-sm text-gray-900 group-hover:text-[#8c58d0] transition-colors">{question}</p>
+                </div>
+              </button>
+            ))
+          ) : (
+            <div className="text-center py-8">
+              <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500">No clarifying questions available</p>
+              <p className="text-xs text-gray-400 mt-1">Wait for AI to analyze the conversation</p>
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function EscalateManuallyModal({
+  open,
+  onClose,
+  issueSummary,
+  onSubmit
+}: {
+  open: boolean
+  onClose: () => void
+  issueSummary: string
+  onSubmit: (data: { summary: string; priority: string; team: string; notes: string }) => void
+}) {
+  const [summary, setSummary] = useState(issueSummary)
+  const [priority, setPriority] = useState('Medium')
+  const [team, setTeam] = useState('')
+  const [notes, setNotes] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+
+  useEffect(() => {
+    if (open) {
+      setSummary(issueSummary)
+      setSubmitted(false)
+    }
+  }, [open, issueSummary])
+
+  const handleSubmit = () => {
+    if (!team) return
+
+    onSubmit({ summary, priority, team, notes })
+    setSubmitted(true)
+
+    setTimeout(() => {
+      onClose()
+      setSummary('')
+      setPriority('Medium')
+      setTeam('')
+      setNotes('')
+    }, 2000)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl bg-white">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-gray-900">
+            <AlertTriangle className="w-5 h-5 text-[#8c58d0]" />
+            Manual Escalation
+          </DialogTitle>
+          <DialogDescription className="text-gray-600">
+            Create a manual escalation ticket for this customer issue
+          </DialogDescription>
+        </DialogHeader>
+
+        {submitted ? (
+          <div className="py-8 text-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Escalation Created</h3>
+            <p className="text-sm text-gray-600">Ticket has been assigned to {team}</p>
+          </div>
+        ) : (
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="summary" className="text-gray-900 font-medium">Issue Summary</Label>
+              <Textarea
+                id="summary"
+                value={summary}
+                onChange={(e) => setSummary(e.target.value)}
+                className="mt-2 border-purple-200 focus:border-[#8c58d0] focus:ring-[#8c58d0]"
+                rows={3}
+                placeholder="Brief summary of the issue..."
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="priority" className="text-gray-900 font-medium">Priority</Label>
+                <Select value={priority} onValueChange={setPriority}>
+                  <SelectTrigger id="priority" className="mt-2 border-purple-200 focus:border-[#8c58d0] focus:ring-[#8c58d0]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Low">Low</SelectItem>
+                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="High">High</SelectItem>
+                    <SelectItem value="Critical">Critical</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="team" className="text-gray-900 font-medium">Target Team</Label>
+                <Select value={team} onValueChange={setTeam}>
+                  <SelectTrigger id="team" className="mt-2 border-purple-200 focus:border-[#8c58d0] focus:ring-[#8c58d0]">
+                    <SelectValue placeholder="Select team..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Fraud Team">Fraud Team</SelectItem>
+                    <SelectItem value="Disputes Team">Disputes Team</SelectItem>
+                    <SelectItem value="Technical Support">Technical Support</SelectItem>
+                    <SelectItem value="Compliance">Compliance</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="notes" className="text-gray-900 font-medium">Additional Notes</Label>
+              <Textarea
+                id="notes"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="mt-2 border-purple-200 focus:border-[#8c58d0] focus:ring-[#8c58d0]"
+                rows={3}
+                placeholder="Any additional context or notes..."
+              />
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <Button
+                onClick={handleSubmit}
+                disabled={!team}
+                className="flex-1 bg-gradient-to-r from-[#8c58d0] to-[#9b6dd9] hover:from-[#7a4aba] hover:to-[#8c58d0] text-white"
+              >
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Create Escalation
+              </Button>
+              <Button onClick={onClose} variant="outline" className="flex-1 border-purple-200 hover:bg-purple-50">
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function CustomerProfileModal({
+  open,
+  onClose
+}: {
+  open: boolean
+  onClose: () => void
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-3xl bg-white max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-gray-900">
+            <UserCircle className="w-5 h-5 text-[#8c58d0]" />
+            Customer Profile
+          </DialogTitle>
+          <DialogDescription className="text-gray-600">
+            Detailed information about the customer
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4 py-4">
+          {/* Account Overview */}
+          <Card className="border-purple-200">
+            <CardHeader className="bg-gradient-to-r from-purple-50 to-white">
+              <CardTitle className="text-sm font-semibold text-gray-900">Account Overview</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4 space-y-3">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Customer Name</p>
+                  <p className="text-sm font-semibold text-gray-900">{CUSTOMER_PROFILE.name}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Customer ID</p>
+                  <p className="text-sm font-semibold text-gray-900">{CUSTOMER_PROFILE.customerId}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Account Status</p>
+                  <Badge className="bg-green-100 text-green-700 border-green-200">
+                    {CUSTOMER_PROFILE.accountStatus}
+                  </Badge>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Member Since</p>
+                  <p className="text-sm font-semibold text-gray-900 flex items-center gap-1">
+                    <Calendar className="w-3 h-3 text-[#8c58d0]" />
+                    {CUSTOMER_PROFILE.memberSince}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Account Type</p>
+                  <p className="text-sm font-semibold text-gray-900 flex items-center gap-1">
+                    <CreditCard className="w-3 h-3 text-[#8c58d0]" />
+                    {CUSTOMER_PROFILE.accountType}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Current Balance</p>
+                  <p className="text-sm font-bold text-[#8c58d0] flex items-center gap-1">
+                    <DollarSign className="w-3 h-3" />
+                    {CUSTOMER_PROFILE.currentBalance.toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Recent Activity */}
+          <Card className="border-purple-200">
+            <CardHeader className="bg-gradient-to-r from-purple-50 to-white">
+              <CardTitle className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-[#8c58d0]" />
+                Recent Activity
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="space-y-3">
+                {CUSTOMER_PROFILE.recentActivity.map((activity, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">{activity.type}</p>
+                      <p className="text-xs text-gray-500">
+                        {activity.date}
+                        {activity.location && ` - ${activity.location}`}
+                      </p>
+                    </div>
+                    <p className="text-sm font-bold text-gray-900">${activity.amount.toFixed(2)}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Flags */}
+          <Card className="border-purple-200">
+            <CardHeader className="bg-gradient-to-r from-purple-50 to-white">
+              <CardTitle className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                <Flag className="w-4 h-4 text-[#8c58d0]" />
+                Account Flags
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div className="space-y-2">
+                {CUSTOMER_PROFILE.flags.map((flag, index) => (
+                  <div key={index} className="flex items-center gap-2 p-2 bg-green-50 rounded-lg border border-green-200">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <p className="text-sm text-green-700">{flag.text}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Contact Info */}
+          <Card className="border-purple-200">
+            <CardHeader className="bg-gradient-to-r from-purple-50 to-white">
+              <CardTitle className="text-sm font-semibold text-gray-900">Contact Information</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4 space-y-3">
+              <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <Mail className="w-4 h-4 text-[#8c58d0]" />
+                <div>
+                  <p className="text-xs text-gray-500">Email</p>
+                  <p className="text-sm font-semibold text-gray-900">{CUSTOMER_PROFILE.contactInfo.email}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <Phone className="w-4 h-4 text-[#8c58d0]" />
+                <div>
+                  <p className="text-xs text-gray-500">Phone</p>
+                  <p className="text-sm font-semibold text-gray-900">{CUSTOMER_PROFILE.contactInfo.phone}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <MapPin className="w-4 h-4 text-[#8c58d0]" />
+                <div>
+                  <p className="text-xs text-gray-500">Address</p>
+                  <p className="text-sm font-semibold text-gray-900">{CUSTOMER_PROFILE.contactInfo.address}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 function DBRActionPanel({
   orchestratorResponse,
   draftText,
@@ -138,7 +519,10 @@ function DBRActionPanel({
   onApprove,
   onEdit,
   onReject,
-  loading
+  loading,
+  onRequestClarification,
+  onEscalateManually,
+  onViewCustomerProfile
 }: {
   orchestratorResponse: NormalizedAgentResponse | null
   draftText: string
@@ -147,6 +531,9 @@ function DBRActionPanel({
   onEdit: () => void
   onReject: () => void
   loading: boolean
+  onRequestClarification: () => void
+  onEscalateManually: () => void
+  onViewCustomerProfile: () => void
 }) {
   const [showReasoning, setShowReasoning] = useState(false)
 
@@ -155,16 +542,16 @@ function DBRActionPanel({
 
   if (!result) {
     return (
-      <div className="w-[30%] bg-gradient-to-br from-gray-50 to-purple-50/30 p-6 flex flex-col">
-        <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-[#8c58d0]" />
+      <div className="w-[30%] bg-gradient-to-br from-[#1a0f2e] to-[#2d1b4e] p-6 flex flex-col">
+        <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-purple-300" />
           DBR Action Panel
         </h2>
-        <Card className="bg-white shadow-md border-purple-100 hover:shadow-lg transition-shadow">
+        <Card className="bg-[#3d2b5e]/50 shadow-md border-purple-500/30 hover:shadow-lg transition-shadow backdrop-blur-sm">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center justify-center py-8">
               <Bot className="w-12 h-12 text-purple-300 mb-3" />
-              <p className="text-gray-500 text-center">Waiting for customer message...</p>
+              <p className="text-gray-300 text-center">Waiting for customer message...</p>
               <p className="text-xs text-gray-400 mt-2">AI will analyze and suggest actions</p>
             </div>
           </CardContent>
@@ -174,17 +561,17 @@ function DBRActionPanel({
   }
 
   return (
-    <div className="w-[30%] bg-gradient-to-br from-gray-50 to-purple-50/30 p-6 flex flex-col gap-4 overflow-y-auto">
-      <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-        <Sparkles className="w-5 h-5 text-[#8c58d0]" />
+    <div className="w-[30%] bg-gradient-to-br from-[#1a0f2e] to-[#2d1b4e] p-6 flex flex-col gap-4 overflow-y-auto">
+      <h2 className="text-xl font-bold text-white flex items-center gap-2">
+        <Sparkles className="w-5 h-5 text-purple-300" />
         DBR Action Panel
       </h2>
 
       {/* Recommendation Card */}
-      <Card className="bg-white shadow-lg border-l-4 border-l-[#8c58d0] hover:shadow-xl transition-all">
-        <CardHeader className="bg-gradient-to-r from-purple-50 to-white">
+      <Card className="bg-[#3d2b5e]/50 shadow-lg border-l-4 border-l-[#8c58d0] hover:shadow-xl transition-all backdrop-blur-sm">
+        <CardHeader className="bg-gradient-to-r from-purple-900/30 to-transparent">
           <CardTitle className="text-base flex items-center justify-between">
-            <span className="text-gray-900">AI Recommendation</span>
+            <span className="text-white">AI Recommendation</span>
             <Badge className="bg-gradient-to-r from-[#8c58d0] to-[#9b6dd9] text-white border-0 shadow-md">
               {result.next_action.replace('_', ' ')}
             </Badge>
@@ -192,12 +579,12 @@ function DBRActionPanel({
         </CardHeader>
         <CardContent className="space-y-4 pt-4">
           {/* Confidence Meter */}
-          <div className="bg-gradient-to-br from-purple-50 to-white p-4 rounded-lg border border-purple-100">
+          <div className="bg-gradient-to-br from-purple-900/30 to-purple-800/20 p-4 rounded-lg border border-purple-500/30">
             <div className="flex justify-between text-sm mb-2">
-              <span className="text-gray-700 font-medium">Confidence Score</span>
-              <span className="font-bold text-[#8c58d0] text-lg">{confidence}%</span>
+              <span className="text-gray-200 font-medium">Confidence Score</span>
+              <span className="font-bold text-purple-300 text-lg">{confidence}%</span>
             </div>
-            <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
+            <div className="relative h-3 bg-gray-700/50 rounded-full overflow-hidden">
               <div
                 className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#8c58d0] to-[#9b6dd9] rounded-full transition-all duration-500 shadow-md"
                 style={{ width: `${confidence}%` }}
@@ -207,13 +594,13 @@ function DBRActionPanel({
 
           {/* Playbook */}
           <div className="pt-2">
-            <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="flex items-start gap-3 p-3 bg-gray-800/30 rounded-lg border border-purple-500/20">
               <div className="w-8 h-8 bg-gradient-to-br from-[#8c58d0] to-[#9b6dd9] rounded-lg flex items-center justify-center flex-shrink-0">
                 <FileText className="w-4 h-4 text-white" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium mb-1">Playbook Matched</p>
-                <p className="text-sm font-semibold text-gray-900">{result.resolution_plan.playbook_matched}</p>
+                <p className="text-xs text-gray-400 font-medium mb-1">Playbook Matched</p>
+                <p className="text-sm font-semibold text-white">{result.resolution_plan.playbook_matched}</p>
               </div>
             </div>
           </div>
@@ -222,13 +609,13 @@ function DBRActionPanel({
           <div className="pt-2">
             <button
               onClick={() => setShowReasoning(!showReasoning)}
-              className="flex items-center gap-2 text-sm text-[#8c58d0] hover:text-[#9b6dd9] font-medium transition-colors"
+              className="flex items-center gap-2 text-sm text-purple-300 hover:text-purple-200 font-medium transition-colors"
             >
               {showReasoning ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               Why this was suggested
             </button>
             {showReasoning && (
-              <div className="mt-3 p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg text-sm text-gray-700 border border-purple-100 shadow-inner animate-in slide-in-from-top-2 duration-300">
+              <div className="mt-3 p-4 bg-gradient-to-br from-purple-900/40 to-blue-900/30 rounded-lg text-sm text-gray-200 border border-purple-500/30 shadow-inner animate-in slide-in-from-top-2 duration-300">
                 {result.ui_display_message}
               </div>
             )}
@@ -249,7 +636,7 @@ function DBRActionPanel({
           onClick={onEdit}
           disabled={loading}
           variant="outline"
-          className="flex-1 border-purple-200 text-[#8c58d0] hover:bg-purple-50 hover:border-[#8c58d0] shadow-md hover:shadow-lg transition-all"
+          className="flex-1 border-purple-400/50 text-purple-200 hover:bg-purple-800/30 hover:border-purple-300 shadow-md hover:shadow-lg transition-all"
         >
           <Edit2 className="w-4 h-4 mr-2" />
           Edit
@@ -258,7 +645,7 @@ function DBRActionPanel({
           onClick={onReject}
           disabled={loading}
           variant="outline"
-          className="flex-1 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-400 shadow-md hover:shadow-lg transition-all"
+          className="flex-1 text-red-300 border-red-500/30 hover:bg-red-900/20 hover:border-red-400/50 shadow-md hover:shadow-lg transition-all"
         >
           <XCircle className="w-4 h-4 mr-2" />
           Reject
@@ -266,11 +653,11 @@ function DBRActionPanel({
       </div>
 
       {/* Editable Response Field */}
-      <Card className="bg-white shadow-lg border-purple-100 hover:shadow-xl transition-shadow">
-        <CardHeader className="bg-gradient-to-r from-purple-50 to-white">
-          <CardTitle className="text-sm font-semibold text-gray-900">Draft Response</CardTitle>
+      <Card className="bg-[#3d2b5e]/50 shadow-lg border-purple-500/30 hover:shadow-xl transition-shadow backdrop-blur-sm">
+        <CardHeader className="bg-gradient-to-r from-purple-900/30 to-transparent">
+          <CardTitle className="text-sm font-semibold text-white">Draft Response</CardTitle>
           <CardDescription className="text-xs flex items-center gap-2">
-            <span className={draftText.length > 450 ? 'text-orange-600 font-medium' : 'text-gray-500'}>
+            <span className={draftText.length > 450 ? 'text-orange-400 font-medium' : 'text-gray-400'}>
               {draftText.length}/500 characters
             </span>
           </CardDescription>
@@ -280,28 +667,43 @@ function DBRActionPanel({
             value={draftText}
             onChange={(e) => onDraftChange(e.target.value)}
             maxLength={500}
-            className="min-h-[150px] text-sm border-purple-200 focus:border-[#8c58d0] focus:ring-[#8c58d0] transition-colors"
+            className="min-h-[150px] text-sm bg-gray-800/30 border-purple-500/30 text-white placeholder:text-gray-500 focus:border-[#8c58d0] focus:ring-[#8c58d0] transition-colors"
             placeholder="AI-generated response will appear here..."
           />
         </CardContent>
       </Card>
 
       {/* Quick Actions */}
-      <Card className="bg-white shadow-lg border-purple-100 hover:shadow-xl transition-shadow">
-        <CardHeader className="bg-gradient-to-r from-purple-50 to-white">
-          <CardTitle className="text-sm font-semibold text-gray-900">Quick Actions</CardTitle>
+      <Card className="bg-[#3d2b5e]/50 shadow-lg border-purple-500/30 hover:shadow-xl transition-shadow backdrop-blur-sm">
+        <CardHeader className="bg-gradient-to-r from-purple-900/30 to-transparent">
+          <CardTitle className="text-sm font-semibold text-white">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 pt-4">
-          <Button variant="outline" size="sm" className="w-full justify-start gap-2 border-gray-200 hover:bg-purple-50 hover:border-[#8c58d0] transition-all">
-            <MessageSquare className="w-4 h-4 text-[#8c58d0]" />
+          <Button
+            onClick={onRequestClarification}
+            variant="outline"
+            size="sm"
+            className="w-full justify-start gap-2 border-purple-400/30 text-purple-200 hover:bg-purple-800/30 hover:border-purple-300 transition-all"
+          >
+            <MessageSquare className="w-4 h-4 text-purple-300" />
             Request Clarification
           </Button>
-          <Button variant="outline" size="sm" className="w-full justify-start gap-2 border-gray-200 hover:bg-purple-50 hover:border-[#8c58d0] transition-all">
-            <AlertTriangle className="w-4 h-4 text-[#8c58d0]" />
+          <Button
+            onClick={onEscalateManually}
+            variant="outline"
+            size="sm"
+            className="w-full justify-start gap-2 border-purple-400/30 text-purple-200 hover:bg-purple-800/30 hover:border-purple-300 transition-all"
+          >
+            <AlertTriangle className="w-4 h-4 text-purple-300" />
             Escalate Manually
           </Button>
-          <Button variant="outline" size="sm" className="w-full justify-start gap-2 border-gray-200 hover:bg-purple-50 hover:border-[#8c58d0] transition-all">
-            <UserCircle className="w-4 h-4 text-[#8c58d0]" />
+          <Button
+            onClick={onViewCustomerProfile}
+            variant="outline"
+            size="sm"
+            className="w-full justify-start gap-2 border-purple-400/30 text-purple-200 hover:bg-purple-800/30 hover:border-purple-300 transition-all"
+          >
+            <UserCircle className="w-4 h-4 text-purple-300" />
             View Customer Profile
           </Button>
         </CardContent>
@@ -598,6 +1000,11 @@ export default function Home() {
   const [sessionTime, setSessionTime] = useState('00:00')
   const [sessionStart] = useState(new Date())
 
+  // Modal states
+  const [clarificationModalOpen, setClarificationModalOpen] = useState(false)
+  const [escalateModalOpen, setEscalateModalOpen] = useState(false)
+  const [profileModalOpen, setProfileModalOpen] = useState(false)
+
   // Session timer
   useEffect(() => {
     const timer = setInterval(() => {
@@ -821,6 +1228,48 @@ export default function Home() {
     ])
   }
 
+  const handleSelectClarifyingQuestion = (question: string) => {
+    const dbrMessage: ChatMessage = {
+      id: Date.now().toString(),
+      sender: 'dbr',
+      text: question,
+      timestamp: new Date()
+    }
+
+    setMessages(prev => [...prev, dbrMessage])
+
+    // Add activity for clarification sent
+    setActivities(prev => [
+      {
+        id: `clarification-${Date.now()}`,
+        agentName: 'Clarification Requested',
+        icon: MessageSquare,
+        triggerReason: 'DBR requested additional information',
+        status: 'completed',
+        timestamp: new Date()
+      },
+      ...prev
+    ])
+  }
+
+  const handleEscalationSubmit = (data: { summary: string; priority: string; team: string; notes: string }) => {
+    setActivities(prev => [
+      {
+        id: `manual-escalation-${Date.now()}`,
+        agentName: 'Manual Escalation Created',
+        icon: AlertTriangle,
+        triggerReason: `DBR escalated to ${data.team}`,
+        status: 'completed',
+        output: `Priority: ${data.priority} | Team: ${data.team} | Summary: ${data.summary}`,
+        timestamp: new Date()
+      },
+      ...prev
+    ])
+  }
+
+  const result = orchestratorResponse?.result as OrchestratorResult | undefined
+  const clarifyingQuestions = result?.conversation_analysis?.clarifying_questions || []
+
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-50 to-purple-50/20">
       <TopHeader sessionTime={sessionTime} dbrName="Sarah Johnson" />
@@ -834,6 +1283,9 @@ export default function Home() {
           onEdit={handleEdit}
           onReject={handleReject}
           loading={loading}
+          onRequestClarification={() => setClarificationModalOpen(true)}
+          onEscalateManually={() => setEscalateModalOpen(true)}
+          onViewCustomerProfile={() => setProfileModalOpen(true)}
         />
 
         <ChatPanel
@@ -847,6 +1299,26 @@ export default function Home() {
 
         <AIOrchestrationTimeline activities={activities} />
       </div>
+
+      {/* Modals */}
+      <RequestClarificationModal
+        open={clarificationModalOpen}
+        onClose={() => setClarificationModalOpen(false)}
+        clarifyingQuestions={clarifyingQuestions}
+        onSelectQuestion={handleSelectClarifyingQuestion}
+      />
+
+      <EscalateManuallyModal
+        open={escalateModalOpen}
+        onClose={() => setEscalateModalOpen(false)}
+        issueSummary={result?.conversation_analysis?.issue_summary || ''}
+        onSubmit={handleEscalationSubmit}
+      />
+
+      <CustomerProfileModal
+        open={profileModalOpen}
+        onClose={() => setProfileModalOpen(false)}
+      />
     </div>
   )
 }
