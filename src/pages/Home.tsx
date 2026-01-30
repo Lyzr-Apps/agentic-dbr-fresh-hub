@@ -683,27 +683,27 @@ function DBRActionPanel({
             onClick={onRequestClarification}
             variant="outline"
             size="sm"
-            className="w-full justify-start gap-2 border-purple-400/30 text-purple-200 hover:bg-purple-800/30 hover:border-purple-300 transition-all"
+            className="w-full justify-start gap-2 border-purple-400/30 text-white hover:bg-purple-800/30 hover:border-purple-300 transition-all"
           >
-            <MessageSquare className="w-4 h-4 text-purple-300" />
+            <MessageSquare className="w-4 h-4 text-white" />
             Request Clarification
           </Button>
           <Button
             onClick={onEscalateManually}
             variant="outline"
             size="sm"
-            className="w-full justify-start gap-2 border-purple-400/30 text-purple-200 hover:bg-purple-800/30 hover:border-purple-300 transition-all"
+            className="w-full justify-start gap-2 border-purple-400/30 text-white hover:bg-purple-800/30 hover:border-purple-300 transition-all"
           >
-            <AlertTriangle className="w-4 h-4 text-purple-300" />
+            <AlertTriangle className="w-4 h-4 text-white" />
             Escalate Manually
           </Button>
           <Button
             onClick={onViewCustomerProfile}
             variant="outline"
             size="sm"
-            className="w-full justify-start gap-2 border-purple-400/30 text-purple-200 hover:bg-purple-800/30 hover:border-purple-300 transition-all"
+            className="w-full justify-start gap-2 border-purple-400/30 text-white hover:bg-purple-800/30 hover:border-purple-300 transition-all"
           >
-            <UserCircle className="w-4 h-4 text-purple-300" />
+            <UserCircle className="w-4 h-4 text-white" />
             View Customer Profile
           </Button>
         </CardContent>
