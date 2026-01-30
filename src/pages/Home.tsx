@@ -209,24 +209,24 @@ function TopHeader({
   onShowHistory: () => void;
 }) {
   return (
-    <div className="bg-gradient-to-r from-[#8c58d0] via-[#9b6dd9] to-[#8c58d0] border-b border-purple-300 px-6 py-4 flex items-center justify-between shadow-lg">
+    <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-md">
       <div className="flex items-center gap-3">
-        <div className="bg-white px-4 py-2 rounded-xl flex items-center justify-center shadow-md transform hover:scale-105 transition-transform">
+        <div className="bg-white px-4 py-2 rounded-xl flex items-center justify-center shadow-md transform hover:scale-105 transition-transform border border-purple-200">
           <img
             src="https://asset.lyzr.app/cYA89SWL"
             alt="Varo"
             className="h-8 object-contain"
           />
         </div>
-        <Badge className="ml-2 bg-white/20 text-white border-white/30 backdrop-blur-sm">
-          <Sparkles className="w-3 h-3 mr-1" />
+        <Badge className="ml-2 bg-purple-50 text-[#8c58d0] border-purple-200">
+          <Sparkles className="w-3 h-3 mr-1 text-[#8c58d0]" />
           DBR Co-Pilot
         </Badge>
       </div>
 
-      <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-lg border border-white/20">
-        <UserCircle className="w-5 h-5 text-white" />
-        <span className="font-medium text-white">{CUSTOMER_PROFILE.name}</span>
+      <div className="flex items-center gap-2 bg-purple-50 px-4 py-2 rounded-lg border border-purple-200">
+        <UserCircle className="w-5 h-5 text-[#8c58d0]" />
+        <span className="font-medium text-[#8c58d0]">{CUSTOMER_PROFILE.name}</span>
       </div>
 
       <div className="flex items-center gap-6">
@@ -234,21 +234,21 @@ function TopHeader({
           onClick={onShowHistory}
           variant="ghost"
           size="sm"
-          className="gap-2 text-white hover:bg-white/20 border border-white/20"
+          className="gap-2 text-[#8c58d0] hover:bg-purple-50 border border-purple-200"
         >
-          <History className="w-4 h-4" />
+          <History className="w-4 h-4 text-[#8c58d0]" />
           Conversation History
         </Button>
-        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20">
-          <Clock className="w-4 h-4 text-white" />
-          <span className="text-sm text-white font-medium">{sessionTime}</span>
+        <div className="flex items-center gap-2 bg-purple-50 px-3 py-1.5 rounded-lg border border-purple-200">
+          <Clock className="w-4 h-4 text-[#8c58d0]" />
+          <span className="text-sm text-[#8c58d0] font-medium">{sessionTime}</span>
         </div>
-        <div className="flex items-center gap-2 text-white">
-          <User className="w-4 h-4" />
+        <div className="flex items-center gap-2 text-[#8c58d0]">
+          <User className="w-4 h-4 text-[#8c58d0]" />
           <span className="text-sm font-medium">{dbrName}</span>
         </div>
-        <Button variant="ghost" size="sm" className="gap-2 text-white hover:bg-white/20">
-          <LogOut className="w-4 h-4" />
+        <Button variant="ghost" size="sm" className="gap-2 text-[#8c58d0] hover:bg-purple-50">
+          <LogOut className="w-4 h-4 text-[#8c58d0]" />
           Logout
         </Button>
       </div>
@@ -955,29 +955,29 @@ function ConversationHistoryView({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-gray-50 to-purple-50/20 z-50 overflow-y-auto">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#8c58d0] via-[#9b6dd9] to-[#8c58d0] border-b border-purple-300 px-6 py-4 shadow-lg sticky top-0 z-10">
+      <div className="bg-white border-b border-gray-200 px-6 py-4 shadow-md sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button
               onClick={onClose}
               variant="ghost"
               size="sm"
-              className="gap-2 text-white hover:bg-white/20 border border-white/20"
+              className="gap-2 text-[#8c58d0] hover:bg-purple-50 border border-purple-200"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4 text-[#8c58d0]" />
               Back to Chat
             </Button>
-            <Separator orientation="vertical" className="h-6 bg-white/30" />
+            <Separator orientation="vertical" className="h-6 bg-gray-300" />
             <div>
-              <h1 className="text-xl font-bold text-white flex items-center gap-2">
-                <History className="w-5 h-5" />
+              <h1 className="text-xl font-bold text-[#8c58d0] flex items-center gap-2">
+                <History className="w-5 h-5 text-[#8c58d0]" />
                 Conversation History
               </h1>
-              <p className="text-sm text-white/80">{CUSTOMER_PROFILE.name}</p>
+              <p className="text-sm text-gray-600">{CUSTOMER_PROFILE.name}</p>
             </div>
           </div>
 
-          <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+          <Badge className="bg-purple-50 text-[#8c58d0] border-purple-200">
             {CONVERSATION_HISTORY.length} conversations
           </Badge>
         </div>
@@ -1477,7 +1477,7 @@ export default function Home() {
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-50 to-purple-50/20">
       <TopHeader
         sessionTime={sessionTime}
-        dbrName="Sarah Johnson"
+        dbrName="Alex Martinez"
         onShowHistory={() => setShowHistoryView(true)}
       />
 
