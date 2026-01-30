@@ -95,10 +95,13 @@ function TopHeader({ sessionTime, dbrName }: { sessionTime: string; dbrName: str
   return (
     <div className="bg-gradient-to-r from-[#8c58d0] via-[#9b6dd9] to-[#8c58d0] border-b border-purple-300 px-6 py-4 flex items-center justify-between shadow-lg">
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-md transform hover:scale-105 transition-transform">
-          <span className="text-[#8c58d0] font-bold text-2xl">V</span>
+        <div className="bg-white px-4 py-2 rounded-xl flex items-center justify-center shadow-md transform hover:scale-105 transition-transform">
+          <img
+            src="https://asset.lyzr.app/cYA89SWL"
+            alt="Varo"
+            className="h-8 object-contain"
+          />
         </div>
-        <span className="font-bold text-2xl text-white tracking-tight">VARO</span>
         <Badge className="ml-2 bg-white/20 text-white border-white/30 backdrop-blur-sm">
           <Sparkles className="w-3 h-3 mr-1" />
           DBR Co-Pilot
