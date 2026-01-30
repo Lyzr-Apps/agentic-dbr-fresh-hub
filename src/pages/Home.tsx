@@ -28,7 +28,8 @@ import {
   MessageSquare,
   PhoneCall,
   UserCircle,
-  LogOut
+  LogOut,
+  Sparkles
 } from 'lucide-react'
 
 // Agent IDs from workflow.json
@@ -92,29 +93,33 @@ interface AgentActivity {
 // Sub-components defined outside Home() to prevent re-creation
 function TopHeader({ sessionTime, dbrName }: { sessionTime: string; dbrName: string }) {
   return (
-    <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <div className="bg-gradient-to-r from-[#8c58d0] via-[#9b6dd9] to-[#8c58d0] border-b border-purple-300 px-6 py-4 flex items-center justify-between shadow-lg">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-[#0066FF] rounded-lg flex items-center justify-center">
-          <span className="text-white font-bold text-xl">V</span>
+        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-md transform hover:scale-105 transition-transform">
+          <span className="text-[#8c58d0] font-bold text-2xl">V</span>
         </div>
-        <span className="font-bold text-xl text-gray-900">VARO</span>
+        <span className="font-bold text-2xl text-white tracking-tight">VARO</span>
+        <Badge className="ml-2 bg-white/20 text-white border-white/30 backdrop-blur-sm">
+          <Sparkles className="w-3 h-3 mr-1" />
+          DBR Co-Pilot
+        </Badge>
       </div>
 
-      <div className="flex items-center gap-2 text-gray-700">
-        <UserCircle className="w-5 h-5" />
-        <span className="font-medium">Customer #12345</span>
+      <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-lg border border-white/20">
+        <UserCircle className="w-5 h-5 text-white" />
+        <span className="font-medium text-white">Customer #12345</span>
       </div>
 
       <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2 text-gray-600">
-          <Clock className="w-4 h-4" />
-          <span className="text-sm">{sessionTime}</span>
+        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20">
+          <Clock className="w-4 h-4 text-white" />
+          <span className="text-sm text-white font-medium">{sessionTime}</span>
         </div>
-        <div className="flex items-center gap-2 text-gray-700">
+        <div className="flex items-center gap-2 text-white">
           <User className="w-4 h-4" />
           <span className="text-sm font-medium">{dbrName}</span>
         </div>
-        <Button variant="ghost" size="sm" className="gap-2">
+        <Button variant="ghost" size="sm" className="gap-2 text-white hover:bg-white/20">
           <LogOut className="w-4 h-4" />
           Logout
         </Button>
@@ -147,11 +152,18 @@ function DBRActionPanel({
 
   if (!result) {
     return (
-      <div className="w-[30%] bg-[#F5F7FA] p-6 flex flex-col">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">DBR Action Panel</h2>
-        <Card className="bg-white">
+      <div className="w-[30%] bg-gradient-to-br from-gray-50 to-purple-50/30 p-6 flex flex-col">
+        <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-[#8c58d0]" />
+          DBR Action Panel
+        </h2>
+        <Card className="bg-white shadow-md border-purple-100 hover:shadow-lg transition-shadow">
           <CardContent className="pt-6">
-            <p className="text-gray-500 text-center">Waiting for customer message...</p>
+            <div className="flex flex-col items-center justify-center py-8">
+              <Bot className="w-12 h-12 text-purple-300 mb-3" />
+              <p className="text-gray-500 text-center">Waiting for customer message...</p>
+              <p className="text-xs text-gray-400 mt-2">AI will analyze and suggest actions</p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -159,34 +171,46 @@ function DBRActionPanel({
   }
 
   return (
-    <div className="w-[30%] bg-[#F5F7FA] p-6 flex flex-col gap-4 overflow-y-auto">
-      <h2 className="text-lg font-semibold text-gray-900">DBR Action Panel</h2>
+    <div className="w-[30%] bg-gradient-to-br from-gray-50 to-purple-50/30 p-6 flex flex-col gap-4 overflow-y-auto">
+      <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+        <Sparkles className="w-5 h-5 text-[#8c58d0]" />
+        DBR Action Panel
+      </h2>
 
       {/* Recommendation Card */}
-      <Card className="bg-white border-[#0066FF]">
-        <CardHeader>
+      <Card className="bg-white shadow-lg border-l-4 border-l-[#8c58d0] hover:shadow-xl transition-all">
+        <CardHeader className="bg-gradient-to-r from-purple-50 to-white">
           <CardTitle className="text-base flex items-center justify-between">
-            <span>AI Recommendation</span>
-            <Badge className="bg-[#0066FF] text-white">{result.next_action.replace('_', ' ')}</Badge>
+            <span className="text-gray-900">AI Recommendation</span>
+            <Badge className="bg-gradient-to-r from-[#8c58d0] to-[#9b6dd9] text-white border-0 shadow-md">
+              {result.next_action.replace('_', ' ')}
+            </Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-4">
           {/* Confidence Meter */}
-          <div>
+          <div className="bg-gradient-to-br from-purple-50 to-white p-4 rounded-lg border border-purple-100">
             <div className="flex justify-between text-sm mb-2">
-              <span className="text-gray-600">Confidence</span>
-              <span className="font-semibold text-[#0066FF]">{confidence}%</span>
+              <span className="text-gray-700 font-medium">Confidence Score</span>
+              <span className="font-bold text-[#8c58d0] text-lg">{confidence}%</span>
             </div>
-            <Progress value={confidence} className="h-2" />
+            <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#8c58d0] to-[#9b6dd9] rounded-full transition-all duration-500 shadow-md"
+                style={{ width: `${confidence}%` }}
+              />
+            </div>
           </div>
 
           {/* Playbook */}
           <div className="pt-2">
-            <div className="flex items-start gap-2">
-              <FileText className="w-4 h-4 text-gray-500 mt-0.5" />
+            <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#8c58d0] to-[#9b6dd9] rounded-lg flex items-center justify-center flex-shrink-0">
+                <FileText className="w-4 h-4 text-white" />
+              </div>
               <div>
-                <p className="text-xs text-gray-500">Playbook Matched</p>
-                <p className="text-sm font-medium text-gray-900">{result.resolution_plan.playbook_matched}</p>
+                <p className="text-xs text-gray-500 font-medium mb-1">Playbook Matched</p>
+                <p className="text-sm font-semibold text-gray-900">{result.resolution_plan.playbook_matched}</p>
               </div>
             </div>
           </div>
@@ -195,13 +219,13 @@ function DBRActionPanel({
           <div className="pt-2">
             <button
               onClick={() => setShowReasoning(!showReasoning)}
-              className="flex items-center gap-2 text-sm text-[#0066FF] hover:underline"
+              className="flex items-center gap-2 text-sm text-[#8c58d0] hover:text-[#9b6dd9] font-medium transition-colors"
             >
               {showReasoning ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
               Why this was suggested
             </button>
             {showReasoning && (
-              <div className="mt-2 p-3 bg-blue-50 rounded text-sm text-gray-700">
+              <div className="mt-3 p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg text-sm text-gray-700 border border-purple-100 shadow-inner animate-in slide-in-from-top-2 duration-300">
                 {result.ui_display_message}
               </div>
             )}
@@ -214,15 +238,15 @@ function DBRActionPanel({
         <Button
           onClick={onApprove}
           disabled={loading}
-          className="flex-1 bg-[#0066FF] hover:bg-blue-700 text-white"
+          className="flex-1 bg-gradient-to-r from-[#8c58d0] to-[#9b6dd9] hover:from-[#7a4aba] hover:to-[#8c58d0] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
         >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Approve'}
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CheckCircle className="w-4 h-4 mr-2" />Approve</>}
         </Button>
         <Button
           onClick={onEdit}
           disabled={loading}
           variant="outline"
-          className="flex-1"
+          className="flex-1 border-purple-200 text-[#8c58d0] hover:bg-purple-50 hover:border-[#8c58d0] shadow-md hover:shadow-lg transition-all"
         >
           <Edit2 className="w-4 h-4 mr-2" />
           Edit
@@ -231,45 +255,50 @@ function DBRActionPanel({
           onClick={onReject}
           disabled={loading}
           variant="outline"
-          className="flex-1 text-red-600 border-red-200 hover:bg-red-50"
+          className="flex-1 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-400 shadow-md hover:shadow-lg transition-all"
         >
+          <XCircle className="w-4 h-4 mr-2" />
           Reject
         </Button>
       </div>
 
       {/* Editable Response Field */}
-      <Card className="bg-white">
-        <CardHeader>
-          <CardTitle className="text-sm">Draft Response</CardTitle>
-          <CardDescription className="text-xs">{draftText.length}/500 characters</CardDescription>
+      <Card className="bg-white shadow-lg border-purple-100 hover:shadow-xl transition-shadow">
+        <CardHeader className="bg-gradient-to-r from-purple-50 to-white">
+          <CardTitle className="text-sm font-semibold text-gray-900">Draft Response</CardTitle>
+          <CardDescription className="text-xs flex items-center gap-2">
+            <span className={draftText.length > 450 ? 'text-orange-600 font-medium' : 'text-gray-500'}>
+              {draftText.length}/500 characters
+            </span>
+          </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-4">
           <Textarea
             value={draftText}
             onChange={(e) => onDraftChange(e.target.value)}
             maxLength={500}
-            className="min-h-[150px] text-sm"
+            className="min-h-[150px] text-sm border-purple-200 focus:border-[#8c58d0] focus:ring-[#8c58d0] transition-colors"
             placeholder="AI-generated response will appear here..."
           />
         </CardContent>
       </Card>
 
       {/* Quick Actions */}
-      <Card className="bg-white">
-        <CardHeader>
-          <CardTitle className="text-sm">Quick Actions</CardTitle>
+      <Card className="bg-white shadow-lg border-purple-100 hover:shadow-xl transition-shadow">
+        <CardHeader className="bg-gradient-to-r from-purple-50 to-white">
+          <CardTitle className="text-sm font-semibold text-gray-900">Quick Actions</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <Button variant="outline" size="sm" className="w-full justify-start gap-2">
-            <MessageSquare className="w-4 h-4" />
+        <CardContent className="space-y-2 pt-4">
+          <Button variant="outline" size="sm" className="w-full justify-start gap-2 border-gray-200 hover:bg-purple-50 hover:border-[#8c58d0] transition-all">
+            <MessageSquare className="w-4 h-4 text-[#8c58d0]" />
             Request Clarification
           </Button>
-          <Button variant="outline" size="sm" className="w-full justify-start gap-2">
-            <AlertTriangle className="w-4 h-4" />
+          <Button variant="outline" size="sm" className="w-full justify-start gap-2 border-gray-200 hover:bg-purple-50 hover:border-[#8c58d0] transition-all">
+            <AlertTriangle className="w-4 h-4 text-[#8c58d0]" />
             Escalate Manually
           </Button>
-          <Button variant="outline" size="sm" className="w-full justify-start gap-2">
-            <UserCircle className="w-4 h-4" />
+          <Button variant="outline" size="sm" className="w-full justify-start gap-2 border-gray-200 hover:bg-purple-50 hover:border-[#8c58d0] transition-all">
+            <UserCircle className="w-4 h-4 text-[#8c58d0]" />
             View Customer Profile
           </Button>
         </CardContent>
@@ -303,35 +332,35 @@ function ChatPanel({
   }, [messages])
 
   const getSentimentColor = (sentiment?: string) => {
-    if (!sentiment) return 'bg-gray-100 text-gray-700'
-    if (sentiment === 'frustrated' || sentiment === 'angry') return 'bg-red-100 text-red-700'
-    if (sentiment === 'neutral') return 'bg-gray-100 text-gray-700'
-    return 'bg-green-100 text-green-700'
+    if (!sentiment) return 'bg-gray-100 text-gray-700 border-gray-200'
+    if (sentiment === 'frustrated' || sentiment === 'angry') return 'bg-red-100 text-red-700 border-red-200'
+    if (sentiment === 'neutral') return 'bg-gray-100 text-gray-700 border-gray-200'
+    return 'bg-green-100 text-green-700 border-green-200'
   }
 
   const getUrgencyColor = (urgency?: string) => {
-    if (!urgency) return 'bg-gray-100 text-gray-700'
-    if (urgency === 'critical' || urgency === 'high') return 'bg-red-100 text-red-700'
-    if (urgency === 'medium') return 'bg-yellow-100 text-yellow-700'
-    return 'bg-green-100 text-green-700'
+    if (!urgency) return 'bg-gray-100 text-gray-700 border-gray-200'
+    if (urgency === 'critical' || urgency === 'high') return 'bg-red-100 text-red-700 border-red-200'
+    if (urgency === 'medium') return 'bg-yellow-100 text-yellow-700 border-yellow-200'
+    return 'bg-green-100 text-green-700 border-green-200'
   }
 
   return (
-    <div className="w-[40%] bg-white border-x border-gray-200 flex flex-col">
-      <div className="bg-white border-b border-gray-200 px-6 py-3">
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">Chat</h2>
+    <div className="w-[40%] bg-white border-x border-purple-100 flex flex-col shadow-xl">
+      <div className="bg-gradient-to-r from-white to-purple-50 border-b border-purple-100 px-6 py-4 shadow-sm">
+        <h2 className="text-xl font-bold text-gray-900 mb-3">Chat</h2>
         {result && (
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="outline" className="text-xs border-purple-200 text-gray-700 shadow-sm">
               {result.conversation_analysis.intent.replace('_', ' ')}
             </Badge>
-            <Badge className={`text-xs ${getSentimentColor(result.conversation_analysis.sentiment)}`}>
+            <Badge className={`text-xs border shadow-sm ${getSentimentColor(result.conversation_analysis.sentiment)}`}>
               {result.conversation_analysis.sentiment}
             </Badge>
-            <Badge className={`text-xs ${getUrgencyColor(result.conversation_analysis.urgency)}`}>
+            <Badge className={`text-xs border shadow-sm ${getUrgencyColor(result.conversation_analysis.urgency)}`}>
               {result.conversation_analysis.urgency}
             </Badge>
-            <Badge variant="outline" className="text-xs">
+            <Badge variant="outline" className={`text-xs shadow-sm ${result.scope_assessment.in_scope ? 'bg-green-50 text-green-700 border-green-200' : 'bg-orange-50 text-orange-700 border-orange-200'}`}>
               {result.scope_assessment.in_scope ? 'In-Scope' : 'Out-of-Scope'}
             </Badge>
           </div>
@@ -344,24 +373,27 @@ function ChatPanel({
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex ${msg.sender === 'customer' ? 'justify-start' : 'justify-end'}`}
+              className={`flex ${msg.sender === 'customer' ? 'justify-start' : 'justify-end'} animate-in slide-in-from-bottom-4 duration-300`}
             >
               <div
-                className={`max-w-[75%] rounded-lg px-4 py-3 ${
+                className={`max-w-[75%] rounded-xl px-4 py-3 shadow-md hover:shadow-lg transition-all ${
                   msg.sender === 'customer'
-                    ? 'bg-gray-100 text-gray-900'
+                    ? 'bg-gradient-to-br from-gray-100 to-gray-50 text-gray-900 border border-gray-200'
                     : msg.sender === 'system'
-                    ? 'bg-yellow-50 text-gray-700 border border-yellow-200'
-                    : 'bg-[#0066FF] text-white'
+                    ? 'bg-gradient-to-br from-yellow-50 to-orange-50 text-gray-700 border border-yellow-200'
+                    : 'bg-gradient-to-br from-[#8c58d0] to-[#9b6dd9] text-white shadow-lg'
                 }`}
               >
                 {msg.isAiDraft && (
-                  <Badge className="mb-2 bg-white text-[#0066FF] text-xs">AI Draft</Badge>
+                  <Badge className="mb-2 bg-white text-[#8c58d0] text-xs border-0 shadow-sm">
+                    <Sparkles className="w-3 h-3 mr-1" />
+                    AI Draft
+                  </Badge>
                 )}
-                <p className="text-sm whitespace-pre-wrap">{msg.text}</p>
+                <p className="text-sm whitespace-pre-wrap leading-relaxed">{msg.text}</p>
                 <p
                   className={`text-xs mt-2 ${
-                    msg.sender === 'customer' ? 'text-gray-500' : 'text-white/70'
+                    msg.sender === 'customer' ? 'text-gray-500' : msg.sender === 'system' ? 'text-gray-600' : 'text-white/80'
                   }`}
                 >
                   {msg.timestamp.toLocaleTimeString()}
@@ -373,7 +405,7 @@ function ChatPanel({
       </ScrollArea>
 
       {/* Message Input */}
-      <div className="border-t border-gray-200 p-4">
+      <div className="border-t border-purple-100 p-4 bg-gradient-to-r from-white to-purple-50">
         <div className="flex gap-2">
           <Input
             value={inputMessage}
@@ -386,12 +418,12 @@ function ChatPanel({
             }}
             placeholder="Type customer message..."
             disabled={loading}
-            className="flex-1"
+            className="flex-1 border-purple-200 focus:border-[#8c58d0] focus:ring-[#8c58d0] shadow-sm"
           />
           <Button
             onClick={onSend}
             disabled={loading || !inputMessage.trim()}
-            className="bg-[#0066FF] hover:bg-blue-700 text-white"
+            className="bg-gradient-to-r from-[#8c58d0] to-[#9b6dd9] hover:from-[#7a4aba] hover:to-[#8c58d0] text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           </Button>
@@ -407,28 +439,28 @@ function AIOrchestrationTimeline({ activities }: { activities: AgentActivity[] }
     switch (status) {
       case 'thinking':
         return (
-          <Badge className="bg-blue-100 text-blue-700 gap-1">
+          <Badge className="bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border-blue-200 gap-1 shadow-sm">
             <Loader2 className="w-3 h-3 animate-spin" />
             Thinking
           </Badge>
         )
       case 'completed':
         return (
-          <Badge className="bg-green-100 text-green-700 gap-1">
+          <Badge className="bg-gradient-to-r from-green-100 to-green-50 text-green-700 border-green-200 gap-1 shadow-sm">
             <CheckCircle className="w-3 h-3" />
             Completed
           </Badge>
         )
       case 'awaiting_approval':
         return (
-          <Badge className="bg-orange-100 text-orange-700 gap-1">
+          <Badge className="bg-gradient-to-r from-orange-100 to-orange-50 text-orange-700 border-orange-200 gap-1 shadow-sm">
             <Clock className="w-3 h-3" />
             Awaiting DBR Approval
           </Badge>
         )
       case 'error':
         return (
-          <Badge className="bg-red-100 text-red-700 gap-1">
+          <Badge className="bg-gradient-to-r from-red-100 to-red-50 text-red-700 border-red-200 gap-1 shadow-sm">
             <XCircle className="w-3 h-3" />
             Error
           </Badge>
@@ -439,63 +471,78 @@ function AIOrchestrationTimeline({ activities }: { activities: AgentActivity[] }
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   return (
-    <div className="w-[30%] bg-[#F5F7FA] p-6 overflow-y-auto">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-900 mb-1">AI Orchestration Timeline</h2>
-        <Badge variant="outline" className="text-xs">
-          <Bot className="w-3 h-3 mr-1" />
+    <div className="w-[30%] bg-gradient-to-br from-gray-50 to-purple-50/30 p-6 overflow-y-auto">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+          <Bot className="w-5 h-5 text-[#8c58d0]" />
+          AI Orchestration Timeline
+        </h2>
+        <Badge variant="outline" className="text-xs bg-white border-purple-200 text-[#8c58d0] shadow-sm">
+          <Sparkles className="w-3 h-3 mr-1" />
           Orchestrator Active
         </Badge>
       </div>
 
       <div className="space-y-4">
         {activities.length === 0 ? (
-          <Card className="bg-white">
+          <Card className="bg-white shadow-md border-purple-100 hover:shadow-lg transition-shadow">
             <CardContent className="pt-6">
-              <p className="text-gray-500 text-center text-sm">No agent activity yet</p>
+              <div className="flex flex-col items-center justify-center py-8">
+                <Clock className="w-12 h-12 text-purple-300 mb-3" />
+                <p className="text-gray-500 text-center text-sm">No agent activity yet</p>
+                <p className="text-xs text-gray-400 mt-2">Timeline will appear here</p>
+              </div>
             </CardContent>
           </Card>
         ) : (
           activities.map((activity, idx) => (
             <div key={activity.id} className="relative">
-              {/* Timeline Connector */}
+              {/* Timeline Connector - Purple gradient */}
               {idx < activities.length - 1 && (
-                <div className="absolute left-5 top-16 bottom-0 w-0.5 bg-gray-300 -mb-4" />
+                <div className="absolute left-6 top-20 bottom-0 w-0.5 bg-gradient-to-b from-[#8c58d0] to-purple-300 -mb-4 opacity-50" />
               )}
 
-              <Card className="bg-white relative">
-                <CardHeader className="pb-3">
+              <Card className="bg-white relative shadow-md hover:shadow-xl border-l-4 border-l-[#8c58d0] transition-all animate-in slide-in-from-left-4 duration-300">
+                <CardHeader className="pb-3 bg-gradient-to-r from-purple-50/50 to-white">
                   <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-10 h-10 bg-[#0066FF] rounded-full flex items-center justify-center">
-                        <activity.icon className="w-5 h-5 text-white" />
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#8c58d0] to-[#9b6dd9] rounded-xl flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform">
+                        <activity.icon className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <CardTitle className="text-sm">{activity.agentName}</CardTitle>
-                        <p className="text-xs text-gray-500">{activity.timestamp.toLocaleTimeString()}</p>
+                        <CardTitle className="text-sm font-bold text-gray-900">{activity.agentName}</CardTitle>
+                        <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                          <Clock className="w-3 h-3" />
+                          {activity.timestamp.toLocaleTimeString()}
+                        </p>
                       </div>
                     </div>
                     {getStatusBadge(activity.status)}
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <TrendingUp className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <div className="flex items-start gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <TrendingUp className="w-4 h-4 text-[#8c58d0] mt-0.5" />
                     <div>
-                      <p className="text-xs text-gray-500">Trigger Reason</p>
+                      <p className="text-xs text-gray-500 font-medium mb-1">Trigger Reason</p>
                       <p className="text-sm text-gray-900">{activity.triggerReason}</p>
                     </div>
                   </div>
 
                   {activity.confidence !== undefined && (
-                    <div>
-                      <div className="flex justify-between text-xs mb-1">
-                        <span className="text-gray-500">Confidence</span>
-                        <span className="font-medium text-[#0066FF]">
+                    <div className="bg-gradient-to-br from-purple-50 to-white p-3 rounded-lg border border-purple-100">
+                      <div className="flex justify-between text-xs mb-2">
+                        <span className="text-gray-600 font-medium">Confidence</span>
+                        <span className="font-bold text-[#8c58d0]">
                           {Math.round(activity.confidence * 100)}%
                         </span>
                       </div>
-                      <Progress value={activity.confidence * 100} className="h-1.5" />
+                      <div className="relative h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#8c58d0] to-[#9b6dd9] rounded-full transition-all duration-500"
+                          style={{ width: `${activity.confidence * 100}%` }}
+                        />
+                      </div>
                     </div>
                   )}
 
@@ -505,7 +552,7 @@ function AIOrchestrationTimeline({ activities }: { activities: AgentActivity[] }
                         onClick={() =>
                           setExpandedId(expandedId === activity.id ? null : activity.id)
                         }
-                        className="flex items-center gap-1 text-xs text-[#0066FF] hover:underline"
+                        className="flex items-center gap-1 text-xs text-[#8c58d0] hover:text-[#9b6dd9] font-medium transition-colors"
                       >
                         {expandedId === activity.id ? (
                           <ChevronUp className="w-3 h-3" />
@@ -515,7 +562,7 @@ function AIOrchestrationTimeline({ activities }: { activities: AgentActivity[] }
                         Output Summary
                       </button>
                       {expandedId === activity.id && (
-                        <div className="mt-2 p-2 bg-gray-50 rounded text-xs text-gray-700">
+                        <div className="mt-2 p-3 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg text-xs text-gray-700 border border-purple-100 shadow-inner animate-in slide-in-from-top-2 duration-300">
                           {activity.output}
                         </div>
                       )}
@@ -772,7 +819,7 @@ export default function Home() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[#F5F7FA]">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-gray-50 to-purple-50/20">
       <TopHeader sessionTime={sessionTime} dbrName="Sarah Johnson" />
 
       <div className="flex flex-1 overflow-hidden">
