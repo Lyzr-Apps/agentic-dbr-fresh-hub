@@ -1,0 +1,77 @@
+{
+  "agent_name": "Escalation Intelligence Agent",
+  "agent_id": "697c7291d36f070193f5ae09",
+  "agent_purpose": "recommendation",
+  "description": "Manages escalations and creates Airtable tickets for back-office teams",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "escalation_required": "boolean",
+      "escalation_reason": "string",
+      "escalation_priority": "string",
+      "target_team": "string",
+      "escalation_summary": "string",
+      "evidence_collected": [
+        "string"
+      ],
+      "airtable_ticket_id": "null",
+      "airtable_ticket_created": "boolean",
+      "estimated_resolution_sla": "string",
+      "customer_notification": "string"
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "error",
+    "result": {
+      "escalation_required": true,
+      "escalation_reason": "A complex billing dispute has been reported by customer CUST-12345, with potential fraud indicators. This issue exceeds normal handling and could have financial or security implications.",
+      "escalation_priority": "high",
+      "target_team": "Fraud Team / Disputes Team",
+      "escalation_summary": "Customer CUST-12345 has reported a complex billing dispute with possible fraud involvement. The nature of the evidence suggests potential unauthorized activity and the dispute cannot be resolved at the frontline. Immediate review by the Fraud and Disputes back-office teams is required to determine account security, customer liability, and necessary actions.",
+      "evidence_collected": [
+        "Complex billing dispute details",
+        "Potential fraud indicators as provided by customer",
+        "High priority escalation request"
+      ],
+      "airtable_ticket_id": null,
+      "airtable_ticket_created": false,
+      "estimated_resolution_sla": "24 hours",
+      "customer_notification": "Your case has been escalated to our Fraud and Disputes specialist teams for urgent review. You will be updated within 24 hours regarding the outcome or any required next steps. Thank you for your patience and cooperation."
+    },
+    "metadata": {
+      "agent_name": "Escalation Intelligence Agent",
+      "timestamp": "2024-06-13T15:20:54Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-01-30T09:01:21.084515",
+  "test_message_used": "Provide sample recommendations for testing",
+  "actual_test_response": {
+    "status": "error",
+    "result": {
+      "escalation_required": true,
+      "escalation_reason": "A complex billing dispute has been reported by customer CUST-12345, with potential fraud indicators. This issue exceeds normal handling and could have financial or security implications.",
+      "escalation_priority": "high",
+      "target_team": "Fraud Team / Disputes Team",
+      "escalation_summary": "Customer CUST-12345 has reported a complex billing dispute with possible fraud involvement. The nature of the evidence suggests potential unauthorized activity and the dispute cannot be resolved at the frontline. Immediate review by the Fraud and Disputes back-office teams is required to determine account security, customer liability, and necessary actions.",
+      "evidence_collected": [
+        "Complex billing dispute details",
+        "Potential fraud indicators as provided by customer",
+        "High priority escalation request"
+      ],
+      "airtable_ticket_id": null,
+      "airtable_ticket_created": false,
+      "estimated_resolution_sla": "24 hours",
+      "customer_notification": "Your case has been escalated to our Fraud and Disputes specialist teams for urgent review. You will be updated within 24 hours regarding the outcome or any required next steps. Thank you for your patience and cooperation."
+    },
+    "metadata": {
+      "agent_name": "Escalation Intelligence Agent",
+      "timestamp": "2024-06-13T15:20:54Z"
+    }
+  },
+  "test_passed": true
+}

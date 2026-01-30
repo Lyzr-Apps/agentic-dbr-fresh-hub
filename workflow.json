@@ -1,0 +1,206 @@
+{
+  "workflow_name": "VARO DBR Co-Pilot",
+  "description": "AI-powered customer service co-pilot that assists Digital Banking Representatives with intelligent conversation analysis, scope determination, resolution planning, and escalation management",
+  "nodes": [
+    {
+      "id": "input_node",
+      "type": "Input",
+      "label": "Customer Message",
+      "nodeCategory": "input",
+      "position": {
+        "x": 100,
+        "y": 300
+      }
+    },
+    {
+      "id": "ai_orchestrator",
+      "type": "Agent",
+      "label": "AI Orchestrator (DBR Co-Pilot)",
+      "nodeCategory": "agent",
+      "agent_id": "697c72bad36f070193f5ae0b",
+      "agent_name": "AI Orchestrator (DBR Co-Pilot)",
+      "position": {
+        "x": 350,
+        "y": 300
+      }
+    },
+    {
+      "id": "conversation_intelligence",
+      "type": "Agent",
+      "label": "Conversation Intelligence Agent",
+      "nodeCategory": "agent",
+      "agent_id": "697c72317601d4aab0edb299",
+      "agent_name": "Conversation Intelligence Agent",
+      "position": {
+        "x": 650,
+        "y": 100
+      }
+    },
+    {
+      "id": "scope_account_intelligence",
+      "type": "Agent",
+      "label": "Scope & Account Intelligence Agent",
+      "nodeCategory": "agent",
+      "agent_id": "697c7250d36f070193f5ae05",
+      "agent_name": "Scope & Account Intelligence Agent",
+      "position": {
+        "x": 650,
+        "y": 220
+      }
+    },
+    {
+      "id": "resolution_intelligence",
+      "type": "Agent",
+      "label": "Resolution Intelligence Agent",
+      "nodeCategory": "agent",
+      "agent_id": "697c72717601d4aab0edb29d",
+      "agent_name": "Resolution Intelligence Agent",
+      "position": {
+        "x": 650,
+        "y": 340
+      }
+    },
+    {
+      "id": "escalation_intelligence",
+      "type": "Agent",
+      "label": "Escalation Intelligence Agent",
+      "nodeCategory": "agent",
+      "agent_id": "697c7291d36f070193f5ae09",
+      "agent_name": "Escalation Intelligence Agent",
+      "position": {
+        "x": 650,
+        "y": 460
+      }
+    },
+    {
+      "id": "output_node",
+      "type": "Output",
+      "label": "Response to Customer",
+      "nodeCategory": "end",
+      "position": {
+        "x": 950,
+        "y": 300
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "input_node",
+      "target": "ai_orchestrator"
+    },
+    {
+      "source": "ai_orchestrator",
+      "target": "conversation_intelligence"
+    },
+    {
+      "source": "ai_orchestrator",
+      "target": "scope_account_intelligence"
+    },
+    {
+      "source": "ai_orchestrator",
+      "target": "resolution_intelligence"
+    },
+    {
+      "source": "ai_orchestrator",
+      "target": "escalation_intelligence"
+    },
+    {
+      "source": "conversation_intelligence",
+      "target": "output_node"
+    },
+    {
+      "source": "scope_account_intelligence",
+      "target": "output_node"
+    },
+    {
+      "source": "resolution_intelligence",
+      "target": "output_node"
+    },
+    {
+      "source": "escalation_intelligence",
+      "target": "output_node"
+    }
+  ],
+  "agents": [
+    {
+      "agent_id": "697c72bad36f070193f5ae0b",
+      "name": "AI Orchestrator (DBR Co-Pilot)",
+      "type": "manager",
+      "description": "System brain that maintains conversation state, triggers agents based on message context, applies confidence thresholds, decides when DBR approval is required, and aggregates agent outputs for UI display",
+      "provider": "OpenAI",
+      "model": "gpt-4.1",
+      "temperature": 0.3,
+      "top_p": 1,
+      "managed_agents": [
+        "697c72317601d4aab0edb299",
+        "697c7250d36f070193f5ae05",
+        "697c72717601d4aab0edb29d",
+        "697c7291d36f070193f5ae09"
+      ]
+    },
+    {
+      "agent_id": "697c72317601d4aab0edb299",
+      "name": "Conversation Intelligence Agent",
+      "type": "sub-agent",
+      "description": "Detects intent, analyzes sentiment, identifies urgency, detects missing information, generates structured issue summary, and asks clarifying questions",
+      "provider": "OpenAI",
+      "model": "gpt-4.1",
+      "temperature": 0.3,
+      "top_p": 1,
+      "integrations": []
+    },
+    {
+      "agent_id": "697c7250d36f070193f5ae05",
+      "name": "Scope & Account Intelligence Agent",
+      "type": "sub-agent",
+      "description": "Determines if issue is in-scope for chat resolution, reads customer data from CST, detects risk flags, compliance indicators, or known outages",
+      "provider": "OpenAI",
+      "model": "gpt-4.1",
+      "temperature": 0.2,
+      "top_p": 1,
+      "integrations": ["CST API (pending)"]
+    },
+    {
+      "agent_id": "697c72717601d4aab0edb29d",
+      "name": "Resolution Intelligence Agent",
+      "type": "sub-agent",
+      "description": "Performs semantic search across SOPs, selects best-fit playbook, extracts relevant steps, drafts customer-facing responses, prepares resolution actions",
+      "provider": "OpenAI",
+      "model": "gpt-4.1",
+      "temperature": 0.4,
+      "top_p": 1,
+      "integrations": ["Knowledge Base (VARO SOP)", "Confluence SOPs"],
+      "knowledge_base": {
+        "rag_id": "697c725f47177de38546d709",
+        "rag_name": "varosopknowledgebaseru1x"
+      }
+    },
+    {
+      "agent_id": "697c7291d36f070193f5ae09",
+      "name": "Escalation Intelligence Agent",
+      "type": "sub-agent",
+      "description": "Decides if escalation required, creates escalation ticket in Airtable with auto-populated summary, evidence, priority. Routes to correct back-office team",
+      "provider": "OpenAI",
+      "model": "gpt-4.1",
+      "temperature": 0.2,
+      "top_p": 1,
+      "integrations": ["Airtable (AIRTABLE_CREATE_RECORD, AIRTABLE_GET_RECORD)"]
+    }
+  ],
+  "knowledge_bases": [
+    {
+      "rag_id": "697c725f47177de38546d709",
+      "rag_name": "varosopknowledgebaseru1x",
+      "name": "VARO SOP Knowledge Base",
+      "description": "Standard Operating Procedures (SOPs) from Confluence for customer service resolution playbooks and guidelines",
+      "used_by": ["697c72717601d4aab0edb29d"]
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-01-30T00:00:00Z",
+    "total_agents": 5,
+    "manager_agents": 1,
+    "sub_agents": 4,
+    "integrations": ["Airtable", "CST API (pending)", "Confluence (Knowledge Base)"]
+  }
+}

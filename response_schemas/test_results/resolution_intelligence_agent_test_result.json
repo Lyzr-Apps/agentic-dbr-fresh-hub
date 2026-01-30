@@ -1,0 +1,45 @@
+{
+  "agent_name": "Resolution Intelligence Agent",
+  "agent_id": "697c72717601d4aab0edb29d",
+  "test_message": "Issue: Double charge on subscription. Customer frustrated, high urgency. In-scope for chat resolution. Risk level: Medium. Need SOP-based resolution.",
+  "expected_purpose": "assistant",
+  "timestamp": "2026-01-30T09:01:06.553639",
+  "is_valid_json": true,
+  "validation_errors": [],
+  "actual_response": {
+    "status": "success",
+    "result": {
+      "playbook_matched": "Subscription Double Charge Resolution SOP",
+      "playbook_confidence": 0.92,
+      "resolution_steps": [
+        "1. Empathize with the customer and acknowledge their frustration due to the double charge.",
+        "2. Confirm and verify the customer\u2019s account identity through secure authentication procedures.",
+        "3. Review the customer\u2019s transaction history to validate the double charge on their subscription.",
+        "4. Confirm if both transactions are completed, pending, or if one may be a pre-authorization.",
+        "5. If both charges are confirmed and not as intended, initiate a refund or reversal for the duplicate charge, following internal banking protocols.",
+        "6. Explain the expected timeline for the refund or charge correction (typically 3-5 business days, depending on processing times).",
+        "7. Provide the customer with a case reference number for tracking.",
+        "8. Monitor the transaction status and follow up with the customer if additional information is needed."
+      ],
+      "draft_customer_response": "Thank you for reaching out and letting us know about this issue. I understand how frustrating it can be to experience a double charge on your subscription, and I\u2019m here to help. I\u2019ve reviewed your account and confirmed the duplicate charge. I am initiating a refund for the extra charge right away. The refund should post to your account within 3-5 business days, depending on your bank\u2019s processing times. If you have any further questions or need updates, please let us know. We appreciate your patience and apologize for the inconvenience.",
+      "internal_notes": "Customer is experiencing a double charge on their subscription and is very frustrated, with high urgency. After authenticating the customer, verify both transactions to ensure they are true duplicates and not a result of a pending authorization. Proceed to initiate a refund for the duplicate charge and inform the customer of the expected resolution timeline. Monitor transaction for completion and keep communication open.",
+      "estimated_resolution_time": "5-10 minutes to initiate action, 3-5 business days for refund processing",
+      "requires_dbr_approval": true,
+      "risk_considerations": [
+        "High customer frustration\u2014prioritize empathetic communication.",
+        "Medium risk\u2014possibility of customer escalation if refund is delayed.",
+        "Ensure proper authentication and transaction verification before action.",
+        "Monitor for potential systemic billing errors or repeated issues."
+      ],
+      "alternative_playbooks": [
+        "General Transaction Dispute SOP",
+        "Subscription Services Escalation SOP"
+      ]
+    },
+    "metadata": {
+      "agent_name": "Resolution Intelligence Agent",
+      "timestamp": "2024-06-14T19:12:34Z"
+    }
+  },
+  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"playbook_matched\": \"Subscription Double Charge Resolution SOP\",\n    \"playbook_confidence\": 0.92,\n    \"resolution_steps\": [\n      \"1. Empathize with the customer and acknowledge their frustration due to the double charge.\",\n      \"2. Confirm and verify the customer\u2019s account identity through secure authentication procedures.\",\n      \"3. Review the customer\u2019s transaction history to validate the double charge on their subscription.\",\n      \"4. Confirm if both transactions are completed, pending, or if one may be a pre-authorization.\",\n      \"5. If both charges are confirmed and not as intended, initiate a refund or reversal for the duplicate charge, following internal banking protocols.\",\n      \"6. Explain the expected timeline for the refund or charge correction (typically 3-5 business days, depending on processing times).\",\n      \"7. Provide the customer with a case reference number for tracking.\",\n      \"8. Monitor the transaction status and follow up with the customer if additional information is needed.\"\n    ],\n    \"draft_customer_response\": \"Thank you for reaching out and letting us know about this issue. I understand how frustrating it can be to experience a double charge on your subscription, and I\u2019m here to help. I\u2019ve reviewed your account and confirmed the duplicate charge. I am initiating a refund for the extra charge right away. The refund should post to your account within 3-5 business days, depending on your bank\u2019s processing times. If you have any further questions or need updates, please let us know. We appreciate your patience and apologize for the inconvenience.\",\n    \"internal_notes\": \"Customer is experiencing a double charge on their subscription and is very frustrated, with high urgency. After authenticating the customer, verify both transactions to ensure they are true duplicates and not a result of a pending authorization. Proceed to initiate a refund for the duplicate charge and inform the customer of the expected resolution timeline. Monitor transaction for completion and keep communication open.\",\n    \"estimated_resolution_time\": \"5-10 minutes to initiate action, 3-5 business days for refund processing\",\n    \"requires_dbr_approval\": true,\n    \"risk_considerations\": [\n      \"High customer frustration\u2014prioritize empathetic communication.\",\n      \"Medium risk\u2014possibility of customer escalation if refund is delayed.\",\n      \"Ensure proper authentication and transaction verification before action.\",\n      \"Monitor for potential systemic billing errors or repeated issues.\"\n    ],\n    \"alternative_playbooks\": [\n      \"General Transaction Dispute SOP\",\n      \"Subscription Services Escalation SOP\"\n    ]\n  },\n  \"metadata\": {\n    \"agent_name\": \"Resolution Intelligence Agent\",\n    \"timestamp\": \"2024-06-14T19:12:34Z\"\n  }\n}"
+}

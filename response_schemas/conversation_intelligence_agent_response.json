@@ -1,0 +1,82 @@
+{
+  "agent_name": "Conversation Intelligence Agent",
+  "agent_id": "697c72317601d4aab0edb299",
+  "agent_purpose": "analyzer",
+  "description": "Analyzes customer messages to detect intent, sentiment, urgency, and missing information",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "intent": "string",
+      "sentiment": "string",
+      "urgency": "string",
+      "missing_information": [
+        "string"
+      ],
+      "issue_summary": "string",
+      "clarifying_questions": [
+        "string"
+      ],
+      "confidence": "number"
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "intent": "transaction_dispute",
+      "sentiment": "frustrated",
+      "urgency": "critical",
+      "missing_information": [
+        "Subscription service name",
+        "Account details or reference number",
+        "Date(s) of duplicate charge",
+        "Preferred refund method (if any)"
+      ],
+      "issue_summary": "The customer has been charged twice for their subscription and is seeking an immediate resolution, expressing strong dissatisfaction.",
+      "clarifying_questions": [
+        "Can you provide the name of the subscription service affected?",
+        "Could you share your account details or a reference number to help us locate the charges?",
+        "On what date(s) did the duplicate charges occur?",
+        "Would you like the duplicate charge refunded to your payment method or credited to your account?"
+      ],
+      "confidence": 0.98
+    },
+    "metadata": {
+      "agent_name": "Conversation Intelligence Agent",
+      "timestamp": "2024-06-09T10:17:22Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-01-30T09:00:38.490226",
+  "test_message_used": "Analyze this sample data for testing",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "intent": "transaction_dispute",
+      "sentiment": "frustrated",
+      "urgency": "critical",
+      "missing_information": [
+        "Subscription service name",
+        "Account details or reference number",
+        "Date(s) of duplicate charge",
+        "Preferred refund method (if any)"
+      ],
+      "issue_summary": "The customer has been charged twice for their subscription and is seeking an immediate resolution, expressing strong dissatisfaction.",
+      "clarifying_questions": [
+        "Can you provide the name of the subscription service affected?",
+        "Could you share your account details or a reference number to help us locate the charges?",
+        "On what date(s) did the duplicate charges occur?",
+        "Would you like the duplicate charge refunded to your payment method or credited to your account?"
+      ],
+      "confidence": 0.98
+    },
+    "metadata": {
+      "agent_name": "Conversation Intelligence Agent",
+      "timestamp": "2024-06-09T10:17:22Z"
+    }
+  },
+  "test_passed": true
+}

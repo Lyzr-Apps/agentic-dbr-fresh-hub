@@ -1,0 +1,36 @@
+{
+  "agent_name": "Conversation Intelligence Agent",
+  "agent_id": "697c72317601d4aab0edb299",
+  "test_message": "I've been charged twice for my subscription and I need this fixed immediately! This is unacceptable.",
+  "expected_purpose": "analyzer",
+  "timestamp": "2026-01-30T09:00:38.488960",
+  "is_valid_json": true,
+  "validation_errors": [],
+  "actual_response": {
+    "status": "success",
+    "result": {
+      "intent": "transaction_dispute",
+      "sentiment": "frustrated",
+      "urgency": "critical",
+      "missing_information": [
+        "Subscription service name",
+        "Account details or reference number",
+        "Date(s) of duplicate charge",
+        "Preferred refund method (if any)"
+      ],
+      "issue_summary": "The customer has been charged twice for their subscription and is seeking an immediate resolution, expressing strong dissatisfaction.",
+      "clarifying_questions": [
+        "Can you provide the name of the subscription service affected?",
+        "Could you share your account details or a reference number to help us locate the charges?",
+        "On what date(s) did the duplicate charges occur?",
+        "Would you like the duplicate charge refunded to your payment method or credited to your account?"
+      ],
+      "confidence": 0.98
+    },
+    "metadata": {
+      "agent_name": "Conversation Intelligence Agent",
+      "timestamp": "2024-06-09T10:17:22Z"
+    }
+  },
+  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"intent\": \"transaction_dispute\",\n    \"sentiment\": \"frustrated\",\n    \"urgency\": \"critical\",\n    \"missing_information\": [\n      \"Subscription service name\",\n      \"Account details or reference number\",\n      \"Date(s) of duplicate charge\",\n      \"Preferred refund method (if any)\"\n    ],\n    \"issue_summary\": \"The customer has been charged twice for their subscription and is seeking an immediate resolution, expressing strong dissatisfaction.\",\n    \"clarifying_questions\": [\n      \"Can you provide the name of the subscription service affected?\",\n      \"Could you share your account details or a reference number to help us locate the charges?\",\n      \"On what date(s) did the duplicate charges occur?\",\n      \"Would you like the duplicate charge refunded to your payment method or credited to your account?\"\n    ],\n    \"confidence\": 0.98\n  },\n  \"metadata\": {\n    \"agent_name\": \"Conversation Intelligence Agent\",\n    \"timestamp\": \"2024-06-09T10:17:22Z\"\n  }\n}"
+}

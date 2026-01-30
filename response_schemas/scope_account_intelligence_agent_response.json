@@ -1,0 +1,84 @@
+{
+  "agent_name": "Scope & Account Intelligence Agent",
+  "agent_id": "697c7250d36f070193f5ae05",
+  "agent_purpose": "analyzer",
+  "description": "Determines scope and assesses risk for customer issues",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "in_scope": "boolean",
+      "scope_decision_reason": "string",
+      "risk_level": "string",
+      "risk_flags": [
+        "string"
+      ],
+      "compliance_indicators": [
+        "string"
+      ],
+      "known_outages": [
+        "any"
+      ],
+      "cst_data_accessed": "boolean",
+      "recommended_action": "string",
+      "confidence": "number"
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "in_scope": false,
+      "scope_decision_reason": "Billing disputes, particularly involving double charges, typically require investigation and possible refund action. These issues are out-of-scope for chat resolution due to the potential need for escalation, investigation, and compliance review to ensure accurate handling of funds.",
+      "risk_level": "medium",
+      "risk_flags": [
+        "High urgency",
+        "Potential financial impact",
+        "Customer frustration"
+      ],
+      "compliance_indicators": [
+        "Possible refund handling",
+        "Financial reconciliation required"
+      ],
+      "known_outages": [],
+      "cst_data_accessed": false,
+      "recommended_action": "escalate",
+      "confidence": 0.95
+    },
+    "metadata": {
+      "agent_name": "Scope & Account Intelligence Agent",
+      "timestamp": "2024-06-13T13:32:46Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-01-30T09:00:45.548821",
+  "test_message_used": "Analyze this sample data for testing",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "in_scope": false,
+      "scope_decision_reason": "Billing disputes, particularly involving double charges, typically require investigation and possible refund action. These issues are out-of-scope for chat resolution due to the potential need for escalation, investigation, and compliance review to ensure accurate handling of funds.",
+      "risk_level": "medium",
+      "risk_flags": [
+        "High urgency",
+        "Potential financial impact",
+        "Customer frustration"
+      ],
+      "compliance_indicators": [
+        "Possible refund handling",
+        "Financial reconciliation required"
+      ],
+      "known_outages": [],
+      "cst_data_accessed": false,
+      "recommended_action": "escalate",
+      "confidence": 0.95
+    },
+    "metadata": {
+      "agent_name": "Scope & Account Intelligence Agent",
+      "timestamp": "2024-06-13T13:32:46Z"
+    }
+  },
+  "test_passed": true
+}

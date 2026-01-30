@@ -1,0 +1,73 @@
+{
+  "workflow_status": "complete",
+  "step": "agent_creation",
+  "progress": {
+    "workflow_created": true,
+    "agents_created": 5,
+    "agents_total": 5,
+    "schemas_saved": 5,
+    "knowledge_bases_created": 1
+  },
+  "agents": {
+    "manager": {
+      "agent_id": "697c72bad36f070193f5ae0b",
+      "name": "AI Orchestrator (DBR Co-Pilot)",
+      "status": "created",
+      "schema_saved": true,
+      "managed_agents_count": 4
+    },
+    "sub_agents": [
+      {
+        "agent_id": "697c72317601d4aab0edb299",
+        "name": "Conversation Intelligence Agent",
+        "status": "created",
+        "schema_saved": true
+      },
+      {
+        "agent_id": "697c7250d36f070193f5ae05",
+        "name": "Scope & Account Intelligence Agent",
+        "status": "created",
+        "schema_saved": true
+      },
+      {
+        "agent_id": "697c72717601d4aab0edb29d",
+        "name": "Resolution Intelligence Agent",
+        "status": "created",
+        "schema_saved": true,
+        "has_knowledge_base": true,
+        "rag_id": "697c725f47177de38546d709"
+      },
+      {
+        "agent_id": "697c7291d36f070193f5ae09",
+        "name": "Escalation Intelligence Agent",
+        "status": "created",
+        "schema_saved": true,
+        "has_integrations": true,
+        "integrations": ["Airtable"]
+      }
+    ]
+  },
+  "knowledge_bases": [
+    {
+      "rag_id": "697c725f47177de38546d709",
+      "rag_name": "varosopknowledgebaseru1x",
+      "name": "VARO SOP Knowledge Base",
+      "status": "created",
+      "files_ingested": false
+    }
+  ],
+  "response_schemas": [
+    "conversation_intelligence_agent_response.json",
+    "scope_account_intelligence_agent_response.json",
+    "resolution_intelligence_agent_response.json",
+    "escalation_intelligence_agent_response.json",
+    "ai_orchestrator_dbr_co_pilot_response.json"
+  ],
+  "next_steps": [
+    "UI Generator will create the DBR interface",
+    "Ingest SOPs into Knowledge Base (if URLs provided)",
+    "Configure Airtable integration",
+    "Configure CST API integration"
+  ],
+  "timestamp": "2026-01-30T00:00:00Z"
+}

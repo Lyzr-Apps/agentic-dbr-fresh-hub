@@ -1,0 +1,35 @@
+{
+  "agent_name": "Scope & Account Intelligence Agent",
+  "agent_id": "697c7250d36f070193f5ae05",
+  "test_message": "Customer Issue: Double charge on subscription. Intent: Billing Dispute. Sentiment: Frustrated. Urgency: High. Customer ID: CUST-12345",
+  "expected_purpose": "analyzer",
+  "timestamp": "2026-01-30T09:00:45.547493",
+  "is_valid_json": true,
+  "validation_errors": [],
+  "actual_response": {
+    "status": "success",
+    "result": {
+      "in_scope": false,
+      "scope_decision_reason": "Billing disputes, particularly involving double charges, typically require investigation and possible refund action. These issues are out-of-scope for chat resolution due to the potential need for escalation, investigation, and compliance review to ensure accurate handling of funds.",
+      "risk_level": "medium",
+      "risk_flags": [
+        "High urgency",
+        "Potential financial impact",
+        "Customer frustration"
+      ],
+      "compliance_indicators": [
+        "Possible refund handling",
+        "Financial reconciliation required"
+      ],
+      "known_outages": [],
+      "cst_data_accessed": false,
+      "recommended_action": "escalate",
+      "confidence": 0.95
+    },
+    "metadata": {
+      "agent_name": "Scope & Account Intelligence Agent",
+      "timestamp": "2024-06-13T13:32:46Z"
+    }
+  },
+  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"in_scope\": false,\n    \"scope_decision_reason\": \"Billing disputes, particularly involving double charges, typically require investigation and possible refund action. These issues are out-of-scope for chat resolution due to the potential need for escalation, investigation, and compliance review to ensure accurate handling of funds.\",\n    \"risk_level\": \"medium\",\n    \"risk_flags\": [\"High urgency\", \"Potential financial impact\", \"Customer frustration\"],\n    \"compliance_indicators\": [\"Possible refund handling\", \"Financial reconciliation required\"],\n    \"known_outages\": [],\n    \"cst_data_accessed\": false,\n    \"recommended_action\": \"escalate\",\n    \"confidence\": 0.95\n  },\n  \"metadata\": {\n    \"agent_name\": \"Scope & Account Intelligence Agent\",\n    \"timestamp\": \"2024-06-13T13:32:46Z\"\n  }\n}"
+}

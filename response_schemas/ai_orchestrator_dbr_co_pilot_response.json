@@ -1,0 +1,122 @@
+{
+  "agent_name": "AI Orchestrator (DBR Co-Pilot)",
+  "agent_id": "697c72bad36f070193f5ae0b",
+  "agent_purpose": "manager",
+  "description": "Orchestrates all sub-agents and aggregates their outputs for the DBR interface",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "conversation_analysis": {
+        "intent": "string",
+        "sentiment": "string",
+        "urgency": "string",
+        "issue_summary": "string"
+      },
+      "scope_assessment": {
+        "in_scope": "boolean",
+        "risk_level": "string",
+        "recommended_action": "string"
+      },
+      "resolution_plan": {
+        "playbook_matched": "string",
+        "draft_response": "string",
+        "requires_dbr_approval": "boolean"
+      },
+      "escalation_status": {
+        "escalation_required": "boolean",
+        "target_team": "null",
+        "ticket_id": "null"
+      },
+      "next_action": "string",
+      "aggregated_confidence": "number",
+      "ui_display_message": "string"
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string",
+      "agents_triggered": [
+        "string"
+      ]
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "conversation_analysis": {
+        "intent": "transaction_dispute",
+        "sentiment": "frustrated",
+        "urgency": "critical",
+        "issue_summary": "Customer reports being charged twice for their subscription and requests immediate resolution, expressing frustration with the situation."
+      },
+      "scope_assessment": {
+        "in_scope": true,
+        "risk_level": "low",
+        "recommended_action": "chat_resolution"
+      },
+      "resolution_plan": {
+        "playbook_matched": "Duplicate Subscription Charge Dispute SOP",
+        "draft_response": "I'm sorry to hear about the frustration caused by being charged twice for your subscription. I've reviewed your account and can see both transactions. I'll initiate a dispute for the duplicate charge right away. You won't need to take any further steps\u2014we'll keep you updated, and typically, these cases are resolved within a few business days. Thank you for your patience as we handle this for you.",
+        "requires_dbr_approval": true
+      },
+      "escalation_status": {
+        "escalation_required": false,
+        "target_team": null,
+        "ticket_id": null
+      },
+      "next_action": "await_dbr_approval",
+      "aggregated_confidence": 0.91,
+      "ui_display_message": "Customer reported being double-charged for their subscription and is very frustrated. This is in-scope for chat resolution, low risk, and matches the Duplicate Subscription Charge Dispute SOP. Review the draft response and dispute action steps. Please approve and send the message, then initiate the dispute as per SOP."
+    },
+    "metadata": {
+      "agent_name": "AI Orchestrator (DBR Co-Pilot)",
+      "timestamp": "2024-06-13T20:01:32Z",
+      "agents_triggered": [
+        "Conversation Intelligence Agent",
+        "Scope & Account Intelligence Agent",
+        "Resolution Intelligence Agent"
+      ]
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-01-30T09:01:51.370156",
+  "test_message_used": "Process this request and coordinate sub-agents",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "conversation_analysis": {
+        "intent": "transaction_dispute",
+        "sentiment": "frustrated",
+        "urgency": "critical",
+        "issue_summary": "Customer reports being charged twice for their subscription and requests immediate resolution, expressing frustration with the situation."
+      },
+      "scope_assessment": {
+        "in_scope": true,
+        "risk_level": "low",
+        "recommended_action": "chat_resolution"
+      },
+      "resolution_plan": {
+        "playbook_matched": "Duplicate Subscription Charge Dispute SOP",
+        "draft_response": "I'm sorry to hear about the frustration caused by being charged twice for your subscription. I've reviewed your account and can see both transactions. I'll initiate a dispute for the duplicate charge right away. You won't need to take any further steps\u2014we'll keep you updated, and typically, these cases are resolved within a few business days. Thank you for your patience as we handle this for you.",
+        "requires_dbr_approval": true
+      },
+      "escalation_status": {
+        "escalation_required": false,
+        "target_team": null,
+        "ticket_id": null
+      },
+      "next_action": "await_dbr_approval",
+      "aggregated_confidence": 0.91,
+      "ui_display_message": "Customer reported being double-charged for their subscription and is very frustrated. This is in-scope for chat resolution, low risk, and matches the Duplicate Subscription Charge Dispute SOP. Review the draft response and dispute action steps. Please approve and send the message, then initiate the dispute as per SOP."
+    },
+    "metadata": {
+      "agent_name": "AI Orchestrator (DBR Co-Pilot)",
+      "timestamp": "2024-06-13T20:01:32Z",
+      "agents_triggered": [
+        "Conversation Intelligence Agent",
+        "Scope & Account Intelligence Agent",
+        "Resolution Intelligence Agent"
+      ]
+    }
+  },
+  "test_passed": true
+}
