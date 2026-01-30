@@ -131,7 +131,14 @@ const CUSTOMER_PROFILE = {
   }
 }
 
-// Dummy conversation history data
+// Message interface for conversation transcripts
+interface ConversationMessage {
+  sender: 'customer' | 'dbr'
+  text: string
+  time: string
+}
+
+// Dummy conversation history data with full transcripts
 const CONVERSATION_HISTORY = [
   {
     id: '1',
@@ -140,7 +147,19 @@ const CONVERSATION_HISTORY = [
     status: 'Resolved',
     statusColor: 'green',
     duration: '8 minutes',
-    resolution: 'Temporary hold removed, card activated'
+    resolution: 'Temporary hold removed, card activated successfully',
+    transcript: [
+      { sender: 'customer' as const, text: 'Hi, my card was just declined at Target. I have money in my account. What\'s going on?', time: '2:45 PM' },
+      { sender: 'dbr' as const, text: 'I\'m sorry to hear that. Let me check your account right away. Can you confirm the last 4 digits of your card?', time: '2:46 PM' },
+      { sender: 'customer' as const, text: 'It\'s 4567', time: '2:46 PM' },
+      { sender: 'dbr' as const, text: 'Thank you. I can see there was a temporary security hold placed on your card due to unusual activity detected. This is for your protection.', time: '2:47 PM' },
+      { sender: 'customer' as const, text: 'Oh, I did make a large purchase yesterday. Is that why?', time: '2:48 PM' },
+      { sender: 'dbr' as const, text: 'Yes, exactly. I can remove this hold for you right now and reactivate your card. Would you like me to do that?', time: '2:49 PM' },
+      { sender: 'customer' as const, text: 'Yes please!', time: '2:50 PM' },
+      { sender: 'dbr' as const, text: 'Done! Your card is now active. You should be able to use it immediately. Is there anything else I can help you with?', time: '2:51 PM' },
+      { sender: 'customer' as const, text: 'No, that\'s perfect. Thank you so much!', time: '2:52 PM' },
+      { sender: 'dbr' as const, text: 'You\'re welcome! Have a great day.', time: '2:53 PM' }
+    ]
   },
   {
     id: '2',
@@ -149,7 +168,17 @@ const CONVERSATION_HISTORY = [
     status: 'Resolved',
     statusColor: 'green',
     duration: '5 minutes',
-    resolution: 'Explained deposit schedule'
+    resolution: 'Explained deposit schedule, confirmed 2-day early access feature',
+    transcript: [
+      { sender: 'customer' as const, text: 'Hi! When should I expect my direct deposit? My employer said they submitted it yesterday.', time: '11:20 AM' },
+      { sender: 'dbr' as const, text: 'Hello! Thanks for reaching out. With Varo, you can get your direct deposit up to 2 days early. Let me check the status for you.', time: '11:21 AM' },
+      { sender: 'customer' as const, text: 'That would be great!', time: '11:21 AM' },
+      { sender: 'dbr' as const, text: 'I can see your employer submitted the deposit yesterday. You should receive it tomorrow, which is one day early compared to traditional banks.', time: '11:22 AM' },
+      { sender: 'customer' as const, text: 'Perfect! So it will show up in my account tomorrow?', time: '11:23 AM' },
+      { sender: 'dbr' as const, text: 'Yes, typically by 9 AM tomorrow. You\'ll receive a notification as soon as it\'s available. Is there anything else I can help with?', time: '11:24 AM' },
+      { sender: 'customer' as const, text: 'No, that\'s all. Thanks!', time: '11:25 AM' },
+      { sender: 'dbr' as const, text: 'You\'re welcome! Have a wonderful day.', time: '11:25 AM' }
+    ]
   },
   {
     id: '3',
@@ -158,7 +187,16 @@ const CONVERSATION_HISTORY = [
     status: 'Resolved',
     statusColor: 'green',
     duration: '3 minutes',
-    resolution: 'Address updated successfully'
+    resolution: 'Address updated successfully in system',
+    transcript: [
+      { sender: 'customer' as const, text: 'I need to update my mailing address. I moved last week.', time: '4:15 PM' },
+      { sender: 'dbr' as const, text: 'I\'d be happy to help you update your address. What\'s your new address?', time: '4:15 PM' },
+      { sender: 'customer' as const, text: '456 Oak Avenue, San Francisco, CA 94103', time: '4:16 PM' },
+      { sender: 'dbr' as const, text: 'Perfect. I\'ve updated your mailing address to 456 Oak Avenue, San Francisco, CA 94103. The change is effective immediately.', time: '4:17 PM' },
+      { sender: 'customer' as const, text: 'Great, thank you!', time: '4:17 PM' },
+      { sender: 'dbr' as const, text: 'You\'re welcome! If you need a new debit card sent to this address, just let me know.', time: '4:18 PM' },
+      { sender: 'customer' as const, text: 'No, I\'m good. Thanks!', time: '4:18 PM' }
+    ]
   },
   {
     id: '4',
@@ -167,7 +205,23 @@ const CONVERSATION_HISTORY = [
     status: 'Escalated',
     statusColor: 'orange',
     duration: '12 minutes',
-    resolution: 'Ticket #ESC-45678 created'
+    resolution: 'Escalated to Disputes Team - Ticket #ESC-45678 created',
+    transcript: [
+      { sender: 'customer' as const, text: 'I see a charge on my account for $249.99 to "TechGadgets Inc" that I didn\'t make. I need to dispute this.', time: '9:30 AM' },
+      { sender: 'dbr' as const, text: 'I understand your concern. Let me pull up your recent transactions. Can you tell me when you noticed this charge?', time: '9:31 AM' },
+      { sender: 'customer' as const, text: 'It posted yesterday. I\'ve never heard of this company.', time: '9:32 AM' },
+      { sender: 'dbr' as const, text: 'I can see the charge from January 17th. Do you still have your physical card in your possession?', time: '9:33 AM' },
+      { sender: 'customer' as const, text: 'Yes, I have my card right here.', time: '9:33 AM' },
+      { sender: 'dbr' as const, text: 'Thank you for confirming. I\'m going to immediately freeze your card to prevent any additional unauthorized charges. Then I\'ll create a dispute case for you.', time: '9:34 AM' },
+      { sender: 'customer' as const, text: 'Okay, thank you.', time: '9:35 AM' },
+      { sender: 'dbr' as const, text: 'Your card has been frozen. I\'m now escalating this to our Disputes Team who will conduct a full investigation. They typically respond within 2-3 business days.', time: '9:37 AM' },
+      { sender: 'customer' as const, text: 'Will I get my money back?', time: '9:38 AM' },
+      { sender: 'dbr' as const, text: 'We\'ll issue a provisional credit within 10 business days while the investigation is ongoing. Your case number is ESC-45678. You\'ll receive updates via email.', time: '9:39 AM' },
+      { sender: 'customer' as const, text: 'Okay, and what about a new card?', time: '9:40 AM' },
+      { sender: 'dbr' as const, text: 'I\'m ordering a replacement card for you right now. It will arrive in 5-7 business days at your address on file. Is there anything else I can help with?', time: '9:41 AM' },
+      { sender: 'customer' as const, text: 'No, that\'s all. Thank you for your help.', time: '9:42 AM' },
+      { sender: 'dbr' as const, text: 'You\'re welcome. Our Disputes Team will be in touch soon. Have a good day.', time: '9:42 AM' }
+    ]
   },
   {
     id: '5',
@@ -176,7 +230,20 @@ const CONVERSATION_HISTORY = [
     status: 'Resolved',
     statusColor: 'green',
     duration: '6 minutes',
-    resolution: 'New card ordered, arriving in 5-7 days'
+    resolution: 'New card ordered, arriving in 5-7 business days',
+    transcript: [
+      { sender: 'customer' as const, text: 'Hi, I need to order a new debit card. Mine is getting worn out and the chip doesn\'t always work.', time: '1:00 PM' },
+      { sender: 'dbr' as const, text: 'I can definitely help you with that. I\'ll order a replacement card for you. Is your current card still working enough to use until the new one arrives?', time: '1:01 PM' },
+      { sender: 'customer' as const, text: 'Yes, it works sometimes. I just want to get a new one before it stops completely.', time: '1:02 PM' },
+      { sender: 'dbr' as const, text: 'That\'s smart planning! I\'m ordering your new card now. It will be sent to your address on file: 123 Main St, San Francisco, CA 94102. Is that correct?', time: '1:03 PM' },
+      { sender: 'customer' as const, text: 'Yes, that\'s correct.', time: '1:03 PM' },
+      { sender: 'dbr' as const, text: 'Perfect. Your new card will arrive in 5-7 business days. Once you receive it, you\'ll need to activate it through the app or by calling the number on the sticker.', time: '1:04 PM' },
+      { sender: 'customer' as const, text: 'Will my old card still work until then?', time: '1:05 PM' },
+      { sender: 'dbr' as const, text: 'Yes, your current card will remain active until you activate the new one. Once the new card is activated, the old one will automatically deactivate.', time: '1:05 PM' },
+      { sender: 'customer' as const, text: 'Great, thank you!', time: '1:06 PM' },
+      { sender: 'dbr' as const, text: 'You\'re welcome! Is there anything else I can help you with today?', time: '1:06 PM' },
+      { sender: 'customer' as const, text: 'No, that\'s all.', time: '1:06 PM' }
+    ]
   },
   {
     id: '6',
@@ -185,7 +252,15 @@ const CONVERSATION_HISTORY = [
     status: 'Resolved',
     statusColor: 'green',
     duration: '2 minutes',
-    resolution: 'Balance provided'
+    resolution: 'Balance information provided',
+    transcript: [
+      { sender: 'customer' as const, text: 'Can you tell me my current account balance?', time: '3:45 PM' },
+      { sender: 'dbr' as const, text: 'Of course! Your current available balance is $2,847.32.', time: '3:46 PM' },
+      { sender: 'customer' as const, text: 'And are there any pending transactions?', time: '3:46 PM' },
+      { sender: 'dbr' as const, text: 'Yes, you have one pending transaction: $45.67 at Whole Foods from yesterday. This will post tonight.', time: '3:46 PM' },
+      { sender: 'customer' as const, text: 'Perfect, thank you!', time: '3:47 PM' },
+      { sender: 'dbr' as const, text: 'You\'re welcome! Have a great day.', time: '3:47 PM' }
+    ]
   },
   {
     id: '7',
@@ -194,7 +269,21 @@ const CONVERSATION_HISTORY = [
     status: 'Resolved',
     statusColor: 'green',
     duration: '7 minutes',
-    resolution: 'Email and SMS alerts enabled'
+    resolution: 'Email and SMS alerts enabled for transactions and low balance',
+    transcript: [
+      { sender: 'customer' as const, text: 'I want to set up alerts for my account. Can you help me with that?', time: '10:15 AM' },
+      { sender: 'dbr' as const, text: 'Absolutely! I can help you set up alerts. What types of alerts would you like to receive?', time: '10:16 AM' },
+      { sender: 'customer' as const, text: 'I want to know about all transactions and if my balance gets low.', time: '10:16 AM' },
+      { sender: 'dbr' as const, text: 'Great choices! Would you like to receive these alerts via email, text message, or both?', time: '10:17 AM' },
+      { sender: 'customer' as const, text: 'Both would be good.', time: '10:17 AM' },
+      { sender: 'dbr' as const, text: 'Perfect. I\'m setting up the following alerts for you:\n1. Transaction alerts (email & SMS) - You\'ll be notified for every purchase over $1\n2. Low balance alert (email & SMS) - You\'ll be notified when your balance drops below $100\n\nIs that threshold okay for the low balance alert?', time: '10:18 AM' },
+      { sender: 'customer' as const, text: 'Can we make it $200 instead?', time: '10:19 AM' },
+      { sender: 'dbr' as const, text: 'Absolutely! I\'ve updated the low balance threshold to $200. All alerts are now active and will be sent to your email (sarah.johnson@email.com) and phone number ending in 4567.', time: '10:20 AM' },
+      { sender: 'customer' as const, text: 'Perfect! Thank you so much.', time: '10:21 AM' },
+      { sender: 'dbr' as const, text: 'You\'re welcome! You should receive a confirmation text and email shortly. Is there anything else I can assist you with?', time: '10:21 AM' },
+      { sender: 'customer' as const, text: 'No, that\'s everything. Thanks!', time: '10:22 AM' },
+      { sender: 'dbr' as const, text: 'Have a wonderful day!', time: '10:22 AM' }
+    ]
   }
 ]
 
@@ -921,6 +1010,8 @@ function ChatPanel({
 }
 
 function ConversationHistoryView({ onClose }: { onClose: () => void }) {
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+
   const getStatusBadgeClass = (color: string) => {
     switch (color) {
       case 'green':
@@ -945,6 +1036,10 @@ function ConversationHistoryView({ onClose }: { onClose: () => void }) {
       default:
         return <XCircle className="w-4 h-4" />
     }
+  }
+
+  const toggleExpand = (id: string) => {
+    setExpandedId(expandedId === id ? null : id)
   }
 
   return (
@@ -981,48 +1076,127 @@ function ConversationHistoryView({ onClose }: { onClose: () => void }) {
       {/* Content */}
       <div className="max-w-6xl mx-auto p-6">
         <div className="space-y-4">
-          {CONVERSATION_HISTORY.map((conversation) => (
-            <Card
-              key={conversation.id}
-              className="bg-white shadow-md hover:shadow-xl border-l-4 border-l-[#8c58d0] transition-all"
-            >
-              <CardHeader className="bg-gradient-to-r from-purple-50/50 to-white">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Calendar className="w-4 h-4 text-[#8c58d0]" />
-                      <span className="text-lg font-bold text-gray-900">{conversation.date}</span>
+          {CONVERSATION_HISTORY.map((conversation) => {
+            const isExpanded = expandedId === conversation.id
+
+            return (
+              <Card
+                key={conversation.id}
+                className="bg-white shadow-md hover:shadow-xl border-l-4 border-l-[#8c58d0] transition-all"
+              >
+                <CardHeader
+                  className="bg-gradient-to-r from-purple-50/50 to-white cursor-pointer hover:from-purple-100/50 transition-colors"
+                  onClick={() => toggleExpand(conversation.id)}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <Calendar className="w-4 h-4 text-[#8c58d0]" />
+                        <span className="text-lg font-bold text-gray-900">{conversation.date}</span>
+                      </div>
+                      <CardTitle className="text-base text-gray-900 font-semibold flex items-center gap-2">
+                        {conversation.issue}
+                        <button className="text-[#8c58d0] hover:text-[#9b6dd9] transition-colors">
+                          {isExpanded ? (
+                            <ChevronUp className="w-5 h-5" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5" />
+                          )}
+                        </button>
+                      </CardTitle>
                     </div>
-                    <CardTitle className="text-base text-gray-900 font-semibold">
-                      {conversation.issue}
-                    </CardTitle>
+                    <Badge className={`border shadow-sm flex items-center gap-1 ${getStatusBadgeClass(conversation.statusColor)}`}>
+                      {getStatusIcon(conversation.statusColor)}
+                      {conversation.status}
+                    </Badge>
                   </div>
-                  <Badge className={`border shadow-sm flex items-center gap-1 ${getStatusBadgeClass(conversation.statusColor)}`}>
-                    {getStatusIcon(conversation.statusColor)}
-                    {conversation.status}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg border border-purple-100">
-                    <Clock className="w-4 h-4 text-[#8c58d0]" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium">Duration</p>
-                      <p className="text-sm font-semibold text-gray-900">{conversation.duration}</p>
+                </CardHeader>
+
+                <CardContent className="pt-4">
+                  {/* Summary - Always visible */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg border border-purple-100">
+                      <Clock className="w-4 h-4 text-[#8c58d0]" />
+                      <div>
+                        <p className="text-xs text-gray-500 font-medium">Duration</p>
+                        <p className="text-sm font-semibold text-gray-900">{conversation.duration}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg border border-purple-100">
+                      <CheckCircle className="w-4 h-4 text-[#8c58d0]" />
+                      <div>
+                        <p className="text-xs text-gray-500 font-medium">Resolution</p>
+                        <p className="text-sm font-semibold text-gray-900">{conversation.resolution}</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg border border-purple-100">
-                    <CheckCircle className="w-4 h-4 text-[#8c58d0]" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium">Resolution</p>
-                      <p className="text-sm font-semibold text-gray-900">{conversation.resolution}</p>
+
+                  {/* Full Transcript - Expandable */}
+                  {isExpanded && (
+                    <div className="animate-in slide-in-from-top-2 duration-300">
+                      <Separator className="mb-4" />
+
+                      <div className="bg-gradient-to-br from-gray-50 to-purple-50/30 rounded-lg p-4 border border-purple-100">
+                        <div className="flex items-center gap-2 mb-4">
+                          <MessageSquare className="w-4 h-4 text-[#8c58d0]" />
+                          <h3 className="font-semibold text-gray-900">Full Conversation Transcript</h3>
+                        </div>
+
+                        <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                          {conversation.transcript.map((message, index) => (
+                            <div
+                              key={index}
+                              className={`flex ${message.sender === 'customer' ? 'justify-start' : 'justify-end'}`}
+                            >
+                              <div className="max-w-[75%]">
+                                <div
+                                  className={`rounded-xl px-4 py-3 shadow-sm ${
+                                    message.sender === 'customer'
+                                      ? 'bg-gradient-to-br from-gray-100 to-gray-50 text-gray-900 border border-gray-200'
+                                      : 'bg-gradient-to-br from-[#8c58d0] to-[#9b6dd9] text-white'
+                                  }`}
+                                >
+                                  <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.text}</p>
+                                  <p
+                                    className={`text-xs mt-2 ${
+                                      message.sender === 'customer' ? 'text-gray-500' : 'text-white/80'
+                                    }`}
+                                  >
+                                    {message.time}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Resolution Summary */}
+                        <Separator className="my-4" />
+                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
+                          <div className="flex items-start gap-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
+                              <CheckCircle className="w-5 h-5 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-xs text-green-600 font-semibold mb-1">RESOLUTION</p>
+                              <p className="text-sm text-green-900 font-medium">{conversation.resolution}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                  )}
+
+                  {/* Click to expand hint */}
+                  {!isExpanded && (
+                    <div className="text-center pt-2">
+                      <p className="text-xs text-gray-500">Click to view full conversation transcript</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
       </div>
     </div>
