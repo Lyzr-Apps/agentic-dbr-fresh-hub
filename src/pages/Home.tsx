@@ -683,27 +683,27 @@ function DBRActionPanel({
             onClick={onRequestClarification}
             variant="outline"
             size="sm"
-            className="w-full justify-start gap-2 border-purple-400/30 text-white hover:bg-purple-800/30 hover:border-purple-300 transition-all"
+            className="w-full justify-start gap-2 border-purple-400/30 bg-white text-[#8c58d0] hover:bg-purple-50 hover:border-purple-400 transition-all"
           >
-            <MessageSquare className="w-4 h-4 text-white" />
+            <MessageSquare className="w-4 h-4 text-[#8c58d0]" />
             Request Clarification
           </Button>
           <Button
             onClick={onEscalateManually}
             variant="outline"
             size="sm"
-            className="w-full justify-start gap-2 border-purple-400/30 text-white hover:bg-purple-800/30 hover:border-purple-300 transition-all"
+            className="w-full justify-start gap-2 border-purple-400/30 bg-white text-[#8c58d0] hover:bg-purple-50 hover:border-purple-400 transition-all"
           >
-            <AlertTriangle className="w-4 h-4 text-white" />
+            <AlertTriangle className="w-4 h-4 text-[#8c58d0]" />
             Escalate Manually
           </Button>
           <Button
             onClick={onViewCustomerProfile}
             variant="outline"
             size="sm"
-            className="w-full justify-start gap-2 border-purple-400/30 text-white hover:bg-purple-800/30 hover:border-purple-300 transition-all"
+            className="w-full justify-start gap-2 border-purple-400/30 bg-white text-[#8c58d0] hover:bg-purple-50 hover:border-purple-400 transition-all"
           >
-            <UserCircle className="w-4 h-4 text-white" />
+            <UserCircle className="w-4 h-4 text-[#8c58d0]" />
             View Customer Profile
           </Button>
         </CardContent>
