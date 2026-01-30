@@ -41,7 +41,9 @@ import {
   Calendar,
   DollarSign,
   Activity,
-  Flag
+  Flag,
+  History,
+  ArrowLeft
 } from 'lucide-react'
 
 // Agent IDs from workflow.json
@@ -129,8 +131,83 @@ const CUSTOMER_PROFILE = {
   }
 }
 
+// Dummy conversation history data
+const CONVERSATION_HISTORY = [
+  {
+    id: '1',
+    date: 'Jan 28, 2026 - 2:45 PM',
+    issue: 'Card declined at merchant',
+    status: 'Resolved',
+    statusColor: 'green',
+    duration: '8 minutes',
+    resolution: 'Temporary hold removed, card activated'
+  },
+  {
+    id: '2',
+    date: 'Jan 25, 2026 - 11:20 AM',
+    issue: 'Question about direct deposit timing',
+    status: 'Resolved',
+    statusColor: 'green',
+    duration: '5 minutes',
+    resolution: 'Explained deposit schedule'
+  },
+  {
+    id: '3',
+    date: 'Jan 22, 2026 - 4:15 PM',
+    issue: 'Update mailing address',
+    status: 'Resolved',
+    statusColor: 'green',
+    duration: '3 minutes',
+    resolution: 'Address updated successfully'
+  },
+  {
+    id: '4',
+    date: 'Jan 18, 2026 - 9:30 AM',
+    issue: 'Dispute unauthorized charge',
+    status: 'Escalated',
+    statusColor: 'orange',
+    duration: '12 minutes',
+    resolution: 'Ticket #ESC-45678 created'
+  },
+  {
+    id: '5',
+    date: 'Jan 15, 2026 - 1:00 PM',
+    issue: 'Request new debit card',
+    status: 'Resolved',
+    statusColor: 'green',
+    duration: '6 minutes',
+    resolution: 'New card ordered, arriving in 5-7 days'
+  },
+  {
+    id: '6',
+    date: 'Jan 10, 2026 - 3:45 PM',
+    issue: 'Account balance inquiry',
+    status: 'Resolved',
+    statusColor: 'green',
+    duration: '2 minutes',
+    resolution: 'Balance provided'
+  },
+  {
+    id: '7',
+    date: 'Jan 5, 2026 - 10:15 AM',
+    issue: 'Set up account alerts',
+    status: 'Resolved',
+    statusColor: 'green',
+    duration: '7 minutes',
+    resolution: 'Email and SMS alerts enabled'
+  }
+]
+
 // Sub-components defined outside Home() to prevent re-creation
-function TopHeader({ sessionTime, dbrName }: { sessionTime: string; dbrName: string }) {
+function TopHeader({
+  sessionTime,
+  dbrName,
+  onShowHistory
+}: {
+  sessionTime: string;
+  dbrName: string;
+  onShowHistory: () => void;
+}) {
   return (
     <div className="bg-gradient-to-r from-[#8c58d0] via-[#9b6dd9] to-[#8c58d0] border-b border-purple-300 px-6 py-4 flex items-center justify-between shadow-lg">
       <div className="flex items-center gap-3">
@@ -149,10 +226,19 @@ function TopHeader({ sessionTime, dbrName }: { sessionTime: string; dbrName: str
 
       <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-lg border border-white/20">
         <UserCircle className="w-5 h-5 text-white" />
-        <span className="font-medium text-white">Customer #12345</span>
+        <span className="font-medium text-white">{CUSTOMER_PROFILE.name}</span>
       </div>
 
       <div className="flex items-center gap-6">
+        <Button
+          onClick={onShowHistory}
+          variant="ghost"
+          size="sm"
+          className="gap-2 text-white hover:bg-white/20 border border-white/20"
+        >
+          <History className="w-4 h-4" />
+          Conversation History
+        </Button>
         <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20">
           <Clock className="w-4 h-4 text-white" />
           <span className="text-sm text-white font-medium">{sessionTime}</span>
@@ -839,6 +925,115 @@ function ChatPanel({
   )
 }
 
+function ConversationHistoryView({ onClose }: { onClose: () => void }) {
+  const getStatusBadgeClass = (color: string) => {
+    switch (color) {
+      case 'green':
+        return 'bg-green-100 text-green-700 border-green-200'
+      case 'orange':
+        return 'bg-orange-100 text-orange-700 border-orange-200'
+      case 'blue':
+        return 'bg-blue-100 text-blue-700 border-blue-200'
+      default:
+        return 'bg-gray-100 text-gray-700 border-gray-200'
+    }
+  }
+
+  const getStatusIcon = (color: string) => {
+    switch (color) {
+      case 'green':
+        return <CheckCircle className="w-4 h-4" />
+      case 'orange':
+        return <AlertCircle className="w-4 h-4" />
+      case 'blue':
+        return <Clock className="w-4 h-4" />
+      default:
+        return <XCircle className="w-4 h-4" />
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-gradient-to-br from-gray-50 to-purple-50/20 z-50 overflow-y-auto">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#8c58d0] via-[#9b6dd9] to-[#8c58d0] border-b border-purple-300 px-6 py-4 shadow-lg sticky top-0 z-10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-white hover:bg-white/20 border border-white/20"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Chat
+            </Button>
+            <Separator orientation="vertical" className="h-6 bg-white/30" />
+            <div>
+              <h1 className="text-xl font-bold text-white flex items-center gap-2">
+                <History className="w-5 h-5" />
+                Conversation History
+              </h1>
+              <p className="text-sm text-white/80">{CUSTOMER_PROFILE.name}</p>
+            </div>
+          </div>
+
+          <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+            {CONVERSATION_HISTORY.length} conversations
+          </Badge>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="space-y-4">
+          {CONVERSATION_HISTORY.map((conversation) => (
+            <Card
+              key={conversation.id}
+              className="bg-white shadow-md hover:shadow-xl border-l-4 border-l-[#8c58d0] transition-all"
+            >
+              <CardHeader className="bg-gradient-to-r from-purple-50/50 to-white">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Calendar className="w-4 h-4 text-[#8c58d0]" />
+                      <span className="text-lg font-bold text-gray-900">{conversation.date}</span>
+                    </div>
+                    <CardTitle className="text-base text-gray-900 font-semibold">
+                      {conversation.issue}
+                    </CardTitle>
+                  </div>
+                  <Badge className={`border shadow-sm flex items-center gap-1 ${getStatusBadgeClass(conversation.statusColor)}`}>
+                    {getStatusIcon(conversation.statusColor)}
+                    {conversation.status}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg border border-purple-100">
+                    <Clock className="w-4 h-4 text-[#8c58d0]" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium">Duration</p>
+                      <p className="text-sm font-semibold text-gray-900">{conversation.duration}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg border border-purple-100">
+                    <CheckCircle className="w-4 h-4 text-[#8c58d0]" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium">Resolution</p>
+                      <p className="text-sm font-semibold text-gray-900">{conversation.resolution}</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function AIOrchestrationTimeline({ activities }: { activities: AgentActivity[] }) {
   const getStatusBadge = (status: AgentActivity['status']) => {
     switch (status) {
@@ -1004,6 +1199,9 @@ export default function Home() {
   const [clarificationModalOpen, setClarificationModalOpen] = useState(false)
   const [escalateModalOpen, setEscalateModalOpen] = useState(false)
   const [profileModalOpen, setProfileModalOpen] = useState(false)
+
+  // View state
+  const [showHistoryView, setShowHistoryView] = useState(false)
 
   // Session timer
   useEffect(() => {
@@ -1270,9 +1468,18 @@ export default function Home() {
   const result = orchestratorResponse?.result as OrchestratorResult | undefined
   const clarifyingQuestions = result?.conversation_analysis?.clarifying_questions || []
 
+  // Show conversation history view if active
+  if (showHistoryView) {
+    return <ConversationHistoryView onClose={() => setShowHistoryView(false)} />
+  }
+
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-50 to-purple-50/20">
-      <TopHeader sessionTime={sessionTime} dbrName="Sarah Johnson" />
+      <TopHeader
+        sessionTime={sessionTime}
+        dbrName="Sarah Johnson"
+        onShowHistory={() => setShowHistoryView(true)}
+      />
 
       <div className="flex flex-1 overflow-hidden">
         <DBRActionPanel
