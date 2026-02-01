@@ -308,7 +308,6 @@ function TopHeader({
           />
         </div>
         <Badge className="ml-2 bg-purple-50 text-[#8c58d0] border-purple-200">
-          <Sparkles className="w-3 h-3 mr-1 text-[#8c58d0]" />
           Agentic AI–Driven Chat App
         </Badge>
       </div>
