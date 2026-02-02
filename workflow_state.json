@@ -40,10 +40,10 @@
       {
         "agent_id": "697c7291d36f070193f5ae09",
         "name": "Escalation Intelligence Agent",
-        "status": "created",
+        "status": "updated",
         "schema_saved": true,
-        "has_integrations": true,
-        "integrations": ["Airtable"]
+        "has_integrations": false,
+        "integrations": []
       }
     ]
   },
@@ -66,8 +66,8 @@
   "next_steps": [
     "UI Generator will create the DBR interface",
     "Ingest SOPs into Knowledge Base (if URLs provided)",
-    "Configure Airtable integration",
-    "Configure CST API integration"
+    "Configure CST API integration",
+    "Escalation Intelligence Agent generates ticket details for manual processing"
   ],
   "timestamp": "2026-01-30T00:00:00Z"
 }

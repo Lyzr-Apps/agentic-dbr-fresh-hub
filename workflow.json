@@ -179,12 +179,12 @@
       "agent_id": "697c7291d36f070193f5ae09",
       "name": "Escalation Intelligence Agent",
       "type": "sub-agent",
-      "description": "Decides if escalation required, creates escalation ticket in Airtable with auto-populated summary, evidence, priority. Routes to correct back-office team",
+      "description": "Decides if escalation required, generates escalation ticket details with auto-populated summary, evidence, priority, and routing information for manual processing",
       "provider": "OpenAI",
       "model": "gpt-4.1",
       "temperature": 0.2,
       "top_p": 1,
-      "integrations": ["Airtable (AIRTABLE_CREATE_RECORD, AIRTABLE_GET_RECORD)"]
+      "integrations": []
     }
   ],
   "knowledge_bases": [
@@ -201,6 +201,6 @@
     "total_agents": 5,
     "manager_agents": 1,
     "sub_agents": 4,
-    "integrations": ["Airtable", "CST API (pending)", "Confluence (Knowledge Base)"]
+    "integrations": ["CST API (pending)", "Confluence (Knowledge Base)"]
   }
 }
